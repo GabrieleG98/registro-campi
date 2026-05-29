@@ -430,7 +430,7 @@
 
 <script>
   const SUPA_URL = 'https://xjucqvcbhknfdyjtdwbr.supabase.co';
-  const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqdWNxdmNiaGtuZmR5anRkd2JyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1MTg4MzAsImV4cCI6MjA2NDA5NDgzMH0.eMB3PkTbIDdRV-lDdE-FW8kW2d1oeRaWRQBbfSp55L4';
+  const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqdWNxdmNiaGtuZmR5anRkd2JyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMzg4OTgsImV4cCI6MjA5NTYxNDg5OH0.uitw5FUJx1XmDsBpjdS6u2DV2qUpqMPbzktlkW4BGpY';
 
   const CAMPI = ['padel1','padel2','tennis3','tennis4','calcio'];
   const GIORNI = ['Luned\u00ec','Marted\u00ec','Mercoled\u00ec','Gioved\u00ec','Venerd\u00ec','Sabato','Domenica'];
@@ -464,8 +464,8 @@
       'apikey': SUPA_KEY,
       'Authorization': 'Bearer ' + SUPA_KEY,
       'Content-Type': 'application/json',
+      'Prefer': 'return=representation'
     };
-    if (opts.prefer) headers['Prefer'] = opts.prefer;
     const res = await fetch(SUPA_URL + path, {
       method: opts.method || 'GET',
       headers,
@@ -483,8 +483,7 @@
     const mon = getMondayOfWeek(weekOffset);
     const sun = addDays(mon, 6);
     const data = await sbFetch(
-      `/rest/v1/prenotazioni_campi?data=gte.${toISO(mon)}&data=lte.${toISO(sun)}&order=data,ora_inizio`,
-      { prefer: 'return=representation' }
+      `/rest/v1/prenotazioni_campi?data=gte.${toISO(mon)}&data=lte.${toISO(sun)}&order=data,ora_inizio`
     );
     prenotazioni = data || [];
   }
@@ -492,15 +491,13 @@
   async function insertPrenotazione(payload) {
     return await sbFetch('/rest/v1/prenotazioni_campi', {
       method: 'POST',
-      prefer: 'return=representation',
       body: JSON.stringify(payload)
     });
   }
 
   async function deletePrenotazione(id) {
     return await sbFetch(`/rest/v1/prenotazioni_campi?id=eq.${id}`, {
-      method: 'DELETE',
-      prefer: 'return=minimal'
+      method: 'DELETE'
     });
   }
 
