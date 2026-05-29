@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>ALMAR – Prenotazioni Campi</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="ALMAR" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0f2540;
+      --navy-light: #1a3a5c;
+      --navy-dark: #0a1a2e;
+      --green: #1e6b2e;
+      --green-light: #2d9c44;
+      --orange: #b53a00;
+      --orange-light: #e04800;
+      --blue-padel: #1565c0;
+      --blue-padel-light: #1e88e5;
+      --gold: #c9a84c;
+      --white: #ffffff;
+      --bg: #f4f6f9;
+      --card: #ffffff;
+      --border: #d0d8e4;
+      --text: #1a2332;
+      --text-muted: #6b7a8d;
+      --shadow: 0 2px 12px rgba(15,37,64,0.10);
+      --shadow-lg: 0 8px 32px rgba(15,37,64,0.18);
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--navy);
+      padding: 12px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.25);
+    }
+    .topbar-brand { display: flex; align-items: center; gap: 12px; }
+    .topbar-logo {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--white);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 13px; font-weight: 700;
+      color: var(--navy); letter-spacing: 1px;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .topbar-logo img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; }
+    .topbar-text h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px; font-weight: 700;
+      color: var(--white); letter-spacing: 2px;
+      line-height: 1;
+    }
+    .topbar-text small {
+      font-size: 10px; color: rgba(255,255,255,0.6);
+      letter-spacing: 1.5px; text-transform: uppercase;
+    }
+    .topbar-stats { display: flex; gap: 8px; align-items: center; }
+    .stat-badge {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 11px; color: rgba(255,255,255,0.85);
+      display: flex; align-items: center; gap: 5px;
+    }
+    .stat-badge .dot { width: 7px; height: 7px; border-radius: 50%; }
+    .dot-padel { background: var(--blue-padel-light); }
+    .dot-tennis { background: var(--green-light); }
+    .dot-calcio { background: var(--orange-light); }
+
+    /* ── WEEK NAV ── */
+    .week-nav {
+      background: var(--navy-dark);
+      padding: 10px 20px;
+      display: flex; align-items: center; justify-content: center; gap: 16px;
+    }
+    .week-nav button {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      color: white; font-size: 18px;
+      width: 34px; height: 34px;
+      cursor: pointer; transition: background 0.2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .week-nav button:hover { background: rgba(255,255,255,0.2); }
+    .week-nav button:disabled { opacity: 0.3; cursor: default; }
+    .week-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px; color: white; font-weight: 600;
+      min-width: 200px; text-align: center;
+    }
+    .week-today-btn {
+      background: var(--gold) !important;
+      border-color: var(--gold) !important;
+      color: var(--navy) !important;
+      font-size: 11px !important;
+      width: auto !important; padding: 0 10px !important;
+      font-weight: 600 !important;
+    }
+
+    /* ── CAMPI TABS ── */
+    .campi-tabs {
+      background: var(--white);
+      border-bottom: 2px solid var(--border);
+      padding: 0 12px;
+      display: flex; gap: 4px;
+      overflow-x: auto;
+    }
+    .campi-tabs::-webkit-scrollbar { display: none; }
+    .campo-tab {
+      padding: 12px 16px;
+      font-size: 13px; font-weight: 500;
+      color: var(--text-muted);
+      border: none; background: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer; white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .campo-tab.active { color: var(--navy); border-bottom-color: var(--navy); font-weight: 600; }
+    .campo-tab:hover:not(.active) { color: var(--text); }
+
+    /* ── MAIN LAYOUT ── */
+    .main { padding: 16px; max-width: 1400px; margin: 0 auto; }
+
+    /* ── GRID GIORNI ── */
+    .days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 1100px) { .days-grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 700px) { .days-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 420px) { .days-grid { grid-template-columns: 1fr; } }
+
+    .day-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .day-header {
+      background: var(--navy);
+      padding: 10px 14px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .day-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px; font-weight: 700;
+      color: var(--white); letter-spacing: 1px;
+    }
+    .day-date {
+      font-size: 11px; color: rgba(255,255,255,0.6);
+    }
+    .day-today .day-header { background: var(--navy-light); }
+    .day-today .day-header::after {
+      content: 'OGGI';
+      font-size: 9px; font-weight: 700;
+      color: var(--gold); letter-spacing: 1px;
+      background: rgba(201,168,76,0.2);
+      padding: 2px 6px; border-radius: 4px;
+      margin-left: 6px;
+    }
+
+    .day-slots { padding: 8px; }
+
+    /* ── SLOT ── */
+    .slot-item {
+      border-radius: var(--radius-sm);
+      margin-bottom: 6px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: box-shadow 0.2s;
+    }
+    .slot-item:hover { box-shadow: var(--shadow); }
+    .slot-booked { border-color: transparent; }
+    .slot-booked.sport-padel { border-left: 4px solid var(--blue-padel); }
+    .slot-booked.sport-tennis { border-left: 4px solid var(--green); }
+    .slot-booked.sport-calcio { border-left: 4px solid var(--orange); }
+
+    .slot-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 6px 10px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .slot-empty .slot-header { background: var(--bg); }
+    .slot-booked .slot-header { background: rgba(15,37,64,0.04); }
+
+    .slot-time {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px; font-weight: 600;
+      color: var(--navy);
+    }
+    .slot-empty .slot-time { color: var(--text-muted); font-size: 13px; }
+
+    .slot-sport-badge {
+      font-size: 10px; font-weight: 600; padding: 2px 8px;
+      border-radius: 10px; letter-spacing: 0.5px;
+    }
+    .badge-padel { background: rgba(21,101,192,0.12); color: var(--blue-padel); }
+    .badge-tennis { background: rgba(30,107,46,0.12); color: var(--green); }
+    .badge-calcio { background: rgba(181,58,0,0.12); color: var(--orange); }
+
+    .slot-body { padding: 0 10px 8px; display: none; }
+    .slot-item.open .slot-body { display: block; }
+
+    .slot-info-row {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .slot-info-row strong { color: var(--text); font-weight: 600; }
+    .slot-icon { font-size: 13px; }
+
+    /* ── ADD SLOT BTN ── */
+    .add-slot-btn {
+      width: 100%; padding: 7px;
+      background: none; border: 1.5px dashed var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-muted); font-size: 12px;
+      cursor: pointer; transition: all 0.2s;
+      margin-top: 4px;
+    }
+    .add-slot-btn:hover { border-color: var(--navy); color: var(--navy); background: rgba(15,37,64,0.04); }
+
+    /* ── DELETE BTN ── */
+    .delete-btn {
+      background: none; border: none;
+      color: #cc3333; font-size: 14px;
+      cursor: pointer; padding: 2px 6px;
+      border-radius: 4px; transition: background 0.2s;
+      margin-left: 4px;
+    }
+    .delete-btn:hover { background: rgba(204,51,51,0.1); }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(10,26,46,0.6);
+      backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 16px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--white); border-radius: 18px;
+      width: 100%; max-width: 440px;
+      box-shadow: var(--shadow-lg);
+      transform: translateY(20px) scale(0.97);
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+      overflow: hidden;
+    }
+    .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+    .modal-header {
+      background: var(--navy); padding: 18px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .modal-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px; font-weight: 700;
+      color: white; letter-spacing: 1px;
+    }
+    .modal-close {
+      background: rgba(255,255,255,0.15); border: none;
+      color: white; font-size: 18px;
+      width: 32px; height: 32px; border-radius: 50%;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .modal-close:hover { background: rgba(255,255,255,0.25); }
+    .modal-body { padding: 20px; }
+    .form-row { margin-bottom: 14px; }
+    .form-row label {
+      display: block; font-size: 11px; font-weight: 600;
+      color: var(--text-muted); text-transform: uppercase;
+      letter-spacing: 1px; margin-bottom: 5px;
+    }
+    .form-row input, .form-row select, .form-row textarea {
+      width: 100%; padding: 10px 12px;
+      border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+      font-size: 14px; font-family: 'Inter', sans-serif;
+      color: var(--text); background: var(--bg);
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    .form-row input:focus, .form-row select:focus, .form-row textarea:focus {
+      border-color: var(--navy); background: white;
+    }
+    .form-row textarea { resize: vertical; min-height: 60px; }
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .conflict-warning {
+      background: #fff3cd; border: 1.5px solid #ffc107;
+      border-radius: var(--radius-sm); padding: 10px 12px;
+      font-size: 12px; color: #856404;
+      margin-bottom: 14px; display: none;
+    }
+    .conflict-warning.show { display: block; }
+    .modal-footer { padding: 0 20px 20px; display: flex; gap: 10px; }
+    .btn-primary {
+      flex: 1; padding: 12px;
+      background: var(--navy); color: white;
+      border: none; border-radius: var(--radius-sm);
+      font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .btn-primary:hover { background: var(--navy-light); }
+    .btn-primary:disabled { background: var(--border); color: var(--text-muted); cursor: default; }
+    .btn-secondary {
+      padding: 12px 18px;
+      background: var(--bg); color: var(--text);
+      border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+      font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .btn-secondary:hover { background: var(--border); }
+
+    /* ── TOAST ── */
+    .toast-container {
+      position: fixed; bottom: 24px; left: 50%;
+      transform: translateX(-50%);
+      z-index: 300; display: flex; flex-direction: column; gap: 8px;
+      pointer-events: none;
+    }
+    .toast {
+      background: var(--navy); color: white;
+      padding: 12px 20px; border-radius: 30px;
+      font-size: 13px; font-weight: 500;
+      box-shadow: var(--shadow-lg);
+      animation: toastIn 0.3s cubic-bezier(0.34,1.56,0.64,1) forwards;
+      white-space: nowrap;
+    }
+    .toast.success { background: var(--green); }
+    .toast.error { background: #cc3333; }
+    .toast.warning { background: #b57c00; }
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(10px) scale(0.9); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ── LOADING ── */
+    .loading-overlay {
+      position: fixed; inset: 0; z-index: 400;
+      background: var(--navy);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 16px;
+      transition: opacity 0.4s;
+    }
+    .loading-overlay.hidden { opacity: 0; pointer-events: none; }
+    .loading-spinner {
+      width: 40px; height: 40px;
+      border: 3px solid rgba(255,255,255,0.2);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px; color: white; letter-spacing: 2px;
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty-day {
+      text-align: center; padding: 16px 8px;
+      color: var(--text-muted); font-size: 12px;
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 700px) {
+      .topbar-stats { display: none; }
+      .week-label { font-size: 13px; min-width: 140px; }
+      .main { padding: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">ALMAR</div>
+</div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-logo" id="topbarLogo">A</div>
+    <div class="topbar-text">
+      <h1>ALMAR</h1>
+      <small>Timi Ama Villasimius · Padel · Tennis · Calcio</small>
+    </div>
+  </div>
+  <div class="topbar-stats">
+    <div class="stat-badge"><span class="dot dot-padel"></span><span id="statPadel">0</span> Padel</div>
+    <div class="stat-badge"><span class="dot dot-tennis"></span><span id="statTennis">0</span> Tennis</div>
+    <div class="stat-badge"><span class="dot dot-calcio"></span><span id="statCalcio">0</span> Calcio</div>
+  </div>
+</div>
+
+<!-- WEEK NAV -->
+<div class="week-nav">
+  <button id="btnPrevWeek" title="Settimana precedente">&#8249;</button>
+  <div class="week-label" id="weekLabel">–</div>
+  <button id="btnNextWeek" title="Settimana successiva">&#8250;</button>
+  <button class="week-today-btn" id="btnToday">OGGI</button>
+</div>
+
+<!-- CAMPI TABS -->
+<div class="campi-tabs">
+  <button class="campo-tab active" data-campo="all" onclick="filterCampo('all', this)">🏟️ Tutti</button>
+  <button class="campo-tab" data-campo="padel1" onclick="filterCampo('padel1', this)">🎾 Padel 1</button>
+  <button class="campo-tab" data-campo="padel2" onclick="filterCampo('padel2', this)">🎾 Padel 2</button>
+  <button class="campo-tab" data-campo="tennis1" onclick="filterCampo('tennis1', this)">🎾 Tennis 1</button>
+  <button class="campo-tab" data-campo="tennis2" onclick="filterCampo('tennis2', this)">🎾 Tennis 2</button>
+  <button class="campo-tab" data-campo="calcio" onclick="filterCampo('calcio', this)">⚽ Calcio</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="days-grid" id="daysGrid"></div>
+</div>
+
+<!-- MODAL PRENOTAZIONE -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle">Nuova Prenotazione</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="conflict-warning" id="conflictWarning">
+        ⚠️ <span id="conflictMsg">Conflitto rilevato</span>
+      </div>
+      <div class="form-row">
+        <label>Nome e Cognome</label>
+        <input type="text" id="fNome" placeholder="Es. Mario Rossi" />
+      </div>
+      <div class="form-row">
+        <label>Campo</label>
+        <select id="fCampo">
+          <option value="padel1">Padel 1</option>
+          <option value="padel2">Padel 2</option>
+          <option value="tennis1">Tennis 1</option>
+          <option value="tennis2">Tennis 2</option>
+          <option value="calcio">Calcio</option>
+        </select>
+      </div>
+      <div class="form-row form-row-2">
+        <div class="form-row" style="margin:0">
+          <label>Ora Inizio</label>
+          <input type="time" id="fOraInizio" step="1800" />
+        </div>
+        <div class="form-row" style="margin:0">
+          <label>Ora Fine</label>
+          <input type="time" id="fOraFine" step="1800" />
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Attrezzatura</label>
+        <input type="text" id="fAttrezzatura" placeholder="Es. racchette, palline, pettorine…" />
+      </div>
+      <div class="form-row">
+        <label>Note (opzionale)</label>
+        <textarea id="fNote" placeholder="Es. lezione privata, torneo, ecc."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal()">Annulla</button>
+      <button class="btn-primary" id="btnSalva" onclick="salvaPrenotazione()">💾 Salva</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+  // ── CONFIG SUPABASE ──
+  const SUPA_URL = 'https://xjucqvcbhknfdyjtdwbr.supabase.co';
+  const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqdWNxdmNiaGtuZmR5anRkd2JyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1MTg4MzAsImV4cCI6MjA2NDA5NDgzMH0.eMB3PkTbIDdRV-lDdE-FW8kW2d1oeRaWRQBbfSp55L4';
+
+  const CAMPI = ['padel1','padel2','tennis1','tennis2','calcio'];
+  const GIORNI = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'];
+  const SPORT_OF = { padel1:'padel', padel2:'padel', tennis1:'tennis', tennis2:'tennis', calcio:'calcio' };
+  const LABEL_OF = { padel1:'Padel 1', padel2:'Padel 2', tennis1:'Tennis 1', tennis2:'Tennis 2', calcio:'Calcio' };
+
+  let weekOffset = 0;      // 0 = settimana corrente
+  let prenotazioni = [];   // array locale [{id, campo, data, ora_inizio, ora_fine, nome, attrezzatura, note}]
+  let activeCampo = 'all';
+  let modalCtx = null;     // { data, campo } apertura modal
+  let editingId = null;    // id prenotazione in modifica
+
+  // ── UTILS DATE ──
+  function getMondayOfWeek(offset) {
+    const now = new Date();
+    const day = now.getDay(); // 0=dom
+    const diff = (day === 0 ? -6 : 1 - day);
+    const mon = new Date(now);
+    mon.setDate(now.getDate() + diff + offset * 7);
+    mon.setHours(0,0,0,0);
+    return mon;
+  }
+  function addDays(d, n) {
+    const r = new Date(d); r.setDate(d.getDate() + n); return r;
+  }
+  function toISO(d) {
+    return d.toISOString().split('T')[0];
+  }
+  function formatDate(d) {
+    return d.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit' });
+  }
+  function isToday(d) {
+    return toISO(d) === toISO(new Date());
+  }
+  function timeToMinutes(t) {
+    if (!t) return 0;
+    const [h, m] = t.split(':').map(Number);
+    return h * 60 + m;
+  }
+  function formatTime(t) {
+    if (!t) return '';
+    return t.slice(0,5);
+  }
+
+  // ── SUPABASE ──
+  async function sbFetch(path, opts = {}) {
+    const res = await fetch(SUPA_URL + path, {
+      ...opts,
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': 'Bearer ' + SUPA_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': opts.prefer || 'return=representation',
+        ...opts.headers
+      }
+    });
+    if (!res.ok) {
+      const err = await res.text();
+      throw new Error(err);
+    }
+    const text = await res.text();
+    return text ? JSON.parse(text) : null;
+  }
+
+  async function loadPrenotazioni() {
+    const mon = getMondayOfWeek(weekOffset);
+    const sun = addDays(mon, 6);
+    const data = await sbFetch(
+      `/rest/v1/prenotazioni_campi?data=gte.${toISO(mon)}&data=lte.${toISO(sun)}&order=data,ora_inizio`,
+      { prefer: 'return=representation' }
+    );
+    prenotazioni = data || [];
+  }
+
+  async function insertPrenotazione(payload) {
+    return await sbFetch('/rest/v1/prenotazioni_campi', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  }
+
+  async function deletePrenotazione(id) {
+    return await sbFetch(`/rest/v1/prenotazioni_campi?id=eq.${id}`, {
+      method: 'DELETE',
+      prefer: 'return=minimal',
+      headers: { 'Prefer': 'return=minimal' }
+    });
+  }
+
+  // ── CONFLITTI ──
+  function checkConflict(campo, data, oraInizio, oraFine, excludeId = null) {
+    const start = timeToMinutes(oraInizio);
+    const end = timeToMinutes(oraFine);
+    return prenotazioni.filter(p => {
+      if (p.id === excludeId) return false;
+      if (p.campo !== campo) return false;
+      if (p.data !== data) return false;
+      const ps = timeToMinutes(p.ora_inizio);
+      const pe = timeToMinutes(p.ora_fine);
+      return start < pe && end > ps; // overlap
+    });
+  }
+
+  // ── RENDER ──
+  function renderWeek() {
+    const mon = getMondayOfWeek(weekOffset);
+    const sun = addDays(mon, 6);
+    document.getElementById('weekLabel').textContent =
+      formatDate(mon) + ' – ' + formatDate(sun);
+    document.getElementById('btnPrevWeek').disabled = false;
+    document.getElementById('btnNextWeek').disabled = false;
+
+    const grid = document.getElementById('daysGrid');
+    grid.innerHTML = '';
+
+    for (let i = 0; i < 7; i++) {
+      const day = addDays(mon, i);
+      const iso = toISO(day);
+      const col = document.createElement('div');
+      col.className = 'day-card' + (isToday(day) ? ' day-today' : '');
+      col.dataset.dayIso = iso;
+
+      // header
+      col.innerHTML = `
+        <div class="day-header">
+          <span class="day-name">${GIORNI[i]}</span>
+          <span class="day-date">${formatDate(day)}</span>
+        </div>
+        <div class="day-slots" id="slots-${iso}"></div>
+      `;
+      grid.appendChild(col);
+    }
+
+    renderAllSlots();
+    updateStats();
+  }
+
+  function renderAllSlots() {
+    const mon = getMondayOfWeek(weekOffset);
+    for (let i = 0; i < 7; i++) {
+      const iso = toISO(addDays(mon, i));
+      renderDaySlots(iso);
+    }
+  }
+
+  function renderDaySlots(iso) {
+    const container = document.getElementById('slots-' + iso);
+    if (!container) return;
+
+    // filtra per campo attivo
+    const dayPrens = prenotazioni
+      .filter(p => p.data === iso)
+      .filter(p => activeCampo === 'all' || p.campo === activeCampo)
+      .sort((a,b) => timeToMinutes(a.ora_inizio) - timeToMinutes(b.ora_inizio));
+
+    container.innerHTML = '';
+
+    if (dayPrens.length === 0) {
+      container.innerHTML = '<div class="empty-day">Nessuna prenotazione</div>';
+    } else {
+      dayPrens.forEach(p => {
+        const sport = SPORT_OF[p.campo];
+        const div = document.createElement('div');
+        div.className = `slot-item slot-booked sport-${sport}`;
+        div.id = `slot-${p.id}`;
+        div.innerHTML = `
+          <div class="slot-header" onclick="toggleSlot('${p.id}')">
+            <span class="slot-time">${formatTime(p.ora_inizio)} – ${formatTime(p.ora_fine)}</span>
+            <div style="display:flex;align-items:center;gap:4px">
+              <span class="slot-sport-badge badge-${sport}">${LABEL_OF[p.campo]}</span>
+              <button class="delete-btn" onclick="event.stopPropagation(); confirmDelete('${p.id}')" title="Elimina">🗑️</button>
+            </div>
+          </div>
+          <div class="slot-body">
+            ${p.nome ? `<div class="slot-info-row"><span class="slot-icon">👤</span><strong>${p.nome}</strong></div>` : ''}
+            ${p.attrezzatura ? `<div class="slot-info-row"><span class="slot-icon">🎒</span><span>${p.attrezzatura}</span></div>` : ''}
+            ${p.note ? `<div class="slot-info-row"><span class="slot-icon">📝</span><span>${p.note}</span></div>` : ''}
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    // Bottone aggiungi
+    const addBtn = document.createElement('button');
+    addBtn.className = 'add-slot-btn';
+    addBtn.textContent = '+ Aggiungi prenotazione';
+    addBtn.onclick = () => openModal(iso);
+    container.appendChild(addBtn);
+  }
+
+  function toggleSlot(id) {
+    const el = document.getElementById('slot-' + id);
+    if (el) el.classList.toggle('open');
+  }
+
+  function updateStats() {
+    const mon = getMondayOfWeek(weekOffset);
+    const sun = addDays(mon, 6);
+    const weekPren = prenotazioni.filter(p => p.data >= toISO(mon) && p.data <= toISO(sun));
+    document.getElementById('statPadel').textContent =
+      weekPren.filter(p => SPORT_OF[p.campo] === 'padel').length;
+    document.getElementById('statTennis').textContent =
+      weekPren.filter(p => SPORT_OF[p.campo] === 'tennis').length;
+    document.getElementById('statCalcio').textContent =
+      weekPren.filter(p => SPORT_OF[p.campo] === 'calcio').length;
+  }
+
+  // ── FILTRO CAMPO ──
+  function filterCampo(campo, btn) {
+    activeCampo = campo;
+    document.querySelectorAll('.campo-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    renderAllSlots();
+  }
+
+  // ── MODAL ──
+  function openModal(iso, prefillCampo) {
+    editingId = null;
+    modalCtx = { data: iso };
+    document.getElementById('modalTitle').textContent = 'Nuova Prenotazione';
+    document.getElementById('fNome').value = '';
+    document.getElementById('fCampo').value = prefillCampo || activeCampo !== 'all' ? (prefillCampo || activeCampo) : 'padel1';
+    document.getElementById('fOraInizio').value = '09:00';
+    document.getElementById('fOraFine').value = '10:00';
+    document.getElementById('fAttrezzatura').value = '';
+    document.getElementById('fNote').value = '';
+    document.getElementById('conflictWarning').classList.remove('show');
+    document.getElementById('btnSalva').disabled = false;
+    document.getElementById('modalOverlay').classList.add('open');
+    document.getElementById('fNome').focus();
+  }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+  }
+
+  // Controllo conflitti in real-time
+  ['fCampo','fOraInizio','fOraFine'].forEach(id => {
+    document.getElementById(id)?.addEventListener('change', checkConflictLive);
+    document.getElementById(id)?.addEventListener('input', checkConflictLive);
+  });
+
+  function checkConflictLive() {
+    if (!modalCtx) return;
+    const campo = document.getElementById('fCampo').value;
+    const oi = document.getElementById('fOraInizio').value;
+    const of_ = document.getElementById('fOraFine').value;
+    if (!oi || !of_) return;
+    if (timeToMinutes(of_) <= timeToMinutes(oi)) {
+      document.getElementById('conflictMsg').textContent = "L'ora di fine deve essere dopo l'ora di inizio.";
+      document.getElementById('conflictWarning').classList.add('show');
+      document.getElementById('btnSalva').disabled = true;
+      return;
+    }
+    const conflicts = checkConflict(campo, modalCtx.data, oi, of_, editingId);
+    if (conflicts.length > 0) {
+      const c = conflicts[0];
+      document.getElementById('conflictMsg').textContent =
+        `${LABEL_OF[campo]} già occupato dalle ${formatTime(c.ora_inizio)} alle ${formatTime(c.ora_fine)} (${c.nome || 'senza nome'}).`;
+      document.getElementById('conflictWarning').classList.add('show');
+      document.getElementById('btnSalva').disabled = true;
+    } else {
+      document.getElementById('conflictWarning').classList.remove('show');
+      document.getElementById('btnSalva').disabled = false;
+    }
+  }
+
+  async function salvaPrenotazione() {
+    const nome = document.getElementById('fNome').value.trim();
+    const campo = document.getElementById('fCampo').value;
+    const oi = document.getElementById('fOraInizio').value;
+    const of_ = document.getElementById('fOraFine').value;
+    const attr = document.getElementById('fAttrezzatura').value.trim();
+    const note = document.getElementById('fNote').value.trim();
+
+    if (!nome) { showToast('Inserisci il nome del prenotante', 'warning'); return; }
+    if (!oi || !of_) { showToast('Inserisci orario inizio e fine', 'warning'); return; }
+    if (timeToMinutes(of_) <= timeToMinutes(oi)) {
+      showToast("L'ora di fine deve essere dopo l'ora di inizio", 'warning'); return;
+    }
+
+    const conflicts = checkConflict(campo, modalCtx.data, oi, of_, editingId);
+    if (conflicts.length > 0) {
+      showToast('Campo non disponibile in quell\'orario', 'error'); return;
+    }
+
+    document.getElementById('btnSalva').disabled = true;
+    document.getElementById('btnSalva').textContent = 'Salvataggio…';
+
+    try {
+      const payload = {
+        campo, data: modalCtx.data,
+        ora_inizio: oi, ora_fine: of_,
+        nome, attrezzatura: attr, note
+      };
+      const result = await insertPrenotazione(payload);
+      if (result && result[0]) prenotazioni.push(result[0]);
+      closeModal();
+      renderAllSlots();
+      updateStats();
+      showToast('Prenotazione salvata ✓', 'success');
+    } catch(e) {
+      showToast('Errore nel salvataggio', 'error');
+      console.error(e);
+    } finally {
+      document.getElementById('btnSalva').disabled = false;
+      document.getElementById('btnSalva').textContent = '💾 Salva';
+    }
+  }
+
+  // ── DELETE ──
+  async function confirmDelete(id) {
+    const p = prenotazioni.find(x => x.id === id);
+    if (!p) return;
+    const ok = confirm(`Eliminare la prenotazione di ${p.nome || 'senza nome'} (${formatTime(p.ora_inizio)}–${formatTime(p.ora_fine)} su ${LABEL_OF[p.campo]})?`);
+    if (!ok) return;
+    try {
+      await deletePrenotazione(id);
+      prenotazioni = prenotazioni.filter(x => x.id !== id);
+      renderAllSlots();
+      updateStats();
+      showToast('Prenotazione eliminata', 'success');
+    } catch(e) {
+      showToast('Errore nell\'eliminazione', 'error');
+      console.error(e);
+    }
+  }
+
+  // ── TOAST ──
+  function showToast(msg, type = '') {
+    const c = document.getElementById('toastContainer');
+    const t = document.createElement('div');
+    t.className = 'toast ' + type;
+    t.textContent = msg;
+    c.appendChild(t);
+    setTimeout(() => t.remove(), 3000);
+  }
+
+  // ── WEEK NAVIGATION ──
+  document.getElementById('btnPrevWeek').addEventListener('click', () => {
+    weekOffset--;
+    loadAndRender();
+  });
+  document.getElementById('btnNextWeek').addEventListener('click', () => {
+    weekOffset++;
+    loadAndRender();
+  });
+  document.getElementById('btnToday').addEventListener('click', () => {
+    weekOffset = 0;
+    loadAndRender();
+  });
+
+  // Chiudi modal cliccando overlay
+  document.getElementById('modalOverlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+  });
+
+  // ── INIT ──
+  async function loadAndRender() {
+    try {
+      await loadPrenotazioni();
+    } catch(e) {
+      showToast('Errore caricamento dati', 'error');
+      console.error(e);
+      prenotazioni = [];
+    }
+    renderWeek();
+  }
+
+  async function init() {
+    await loadAndRender();
+    document.getElementById('loadingOverlay').classList.add('hidden');
+    setTimeout(() => { document.getElementById('loadingOverlay').style.display = 'none'; }, 400);
+  }
+
+  init();
+</script>
+</body>
+</html>
