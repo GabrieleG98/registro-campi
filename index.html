@@ -9,8 +9,6 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Manrope',sans-serif;background:#ece7de;padding:20px;min-height:100vh}
 .page{max-width:1700px;margin:0 auto;background:#fbf9f5;border-radius:14px;box-shadow:0 8px 40px rgba(0,0,0,.13);padding:24px 28px 20px}
-
-/* HEADER */
 .header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #1a3a5c;padding-bottom:14px;margin-bottom:16px;flex-wrap:wrap;gap:14px}
 .brand .title{font-family:'Cormorant Garamond',serif;font-size:28px;color:#1a3a5c;font-weight:700;line-height:1}
 .brand .subtitle{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#8c8ca4;margin-top:4px}
@@ -25,47 +23,29 @@ body{font-family:'Manrope',sans-serif;background:#ece7de;padding:20px;min-height
 .status.saving{background:#fff3cd;color:#856404}
 .status.saved{background:#d1e7dd;color:#0a3622}
 .status.error{background:#f8d7da;color:#842029}
-
-/* BUTTONS */
 .btn-row{display:flex;gap:7px;align-items:flex-end;flex-wrap:wrap}
 .btn{padding:9px 16px;border:none;border-radius:7px;font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap;letter-spacing:.03em}
-.btn-primary{background:#1a3a5c;color:#fff}
-.btn-primary:hover{background:#142d47}
+.btn-primary{background:#1a3a5c;color:#fff}.btn-primary:hover{background:#142d47}
 .btn-primary:disabled{background:#aaa;cursor:not-allowed}
-.btn-today{background:#c9a84c;color:#fff}
-.btn-today:hover{background:#b5943d}
-.btn-outline{background:transparent;color:#1a3a5c;border:2px solid #1a3a5c}
-.btn-outline:hover{background:#1a3a5c;color:#fff}
-.btn-ghost{background:transparent;color:#6c757d;border:2px solid #dee2e6}
-.btn-ghost:hover{background:#6c757d;color:#fff;border-color:#6c757d}
-.btn-danger{background:transparent;color:#dc3545;border:2px solid #f1aeb5}
-.btn-danger:hover{background:#dc3545;color:#fff;border-color:#dc3545}
-
-/* TABS */
+.btn-today{background:#c9a84c;color:#fff}.btn-today:hover{background:#b5943d}
+.btn-outline{background:transparent;color:#1a3a5c;border:2px solid #1a3a5c}.btn-outline:hover{background:#1a3a5c;color:#fff}
+.btn-ghost{background:transparent;color:#6c757d;border:2px solid #dee2e6}.btn-ghost:hover{background:#6c757d;color:#fff;border-color:#6c757d}
+.btn-danger{background:transparent;color:#dc3545;border:2px solid #f1aeb5}.btn-danger:hover{background:#dc3545;color:#fff;border-color:#dc3545}
 .tabs{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
 .tab-btn{padding:7px 18px;border:2px solid transparent;border-radius:7px;font-family:'Manrope',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;background:#fff;transition:all .15s;display:flex;align-items:center;gap:6px}
 .badge{font-size:10px;font-weight:700;padding:1px 7px;border-radius:10px;background:rgba(0,0,0,.07)}
-.tab-btn.padel{color:#1a3a5c;border-color:#1a3a5c33}
-.tab-btn.tennis{color:#2d7d32;border-color:#2d7d3233}
-.tab-btn.calcio{color:#c84b00;border-color:#c84b0033}
+.tab-btn.padel{color:#1a3a5c;border-color:#1a3a5c33}.tab-btn.tennis{color:#2d7d32;border-color:#2d7d3233}.tab-btn.calcio{color:#c84b00;border-color:#c84b0033}
 .tab-btn.active.padel{background:#1a3a5c;color:#fff;border-color:#1a3a5c}
 .tab-btn.active.tennis{background:#2d7d32;color:#fff;border-color:#2d7d32}
 .tab-btn.active.calcio{background:#c84b00;color:#fff;border-color:#c84b00}
 .tab-btn.active .badge{background:rgba(255,255,255,.22);color:#fff}
-
-/* VIEWS */
 .campo-view{display:none}.campo-view.active{display:block}
-
-/* ADD SLOT BAR */
 .add-slot-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#f0f4f8;border-radius:8px;margin-bottom:14px;flex-wrap:wrap}
 .add-slot-bar label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8c8ca4}
 .slot-time-input{border:none;border-bottom:1.5px solid #1a3a5c;background:transparent;font-family:'Manrope',sans-serif;font-size:13px;color:#1a3a5c;outline:none;width:72px;padding:2px 4px;text-align:center}
 .slot-time-input:focus{border-bottom-width:2.5px}
 .btn-add-slot{padding:7px 16px;background:#1a3a5c;color:#fff;border:none;border-radius:6px;font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:background .15s}
 .btn-add-slot:hover{background:#142d47}
-.add-sep{color:#ccc;font-size:14px}
-
-/* TABLE */
 table{width:100%;border-collapse:collapse;table-layout:fixed}
 thead th{padding:9px 6px;text-align:center;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border-bottom:2px solid rgba(26,58,92,.15);white-space:nowrap}
 thead th.th-time{width:100px;background:#1a3a5c;color:#fff;border-radius:7px 0 0 0;vertical-align:middle}
@@ -75,8 +55,6 @@ thead th.th-weekend{background:rgba(210,190,150,.1)}
 .day-name{font-size:12px;font-weight:700;color:#1a3a5c}
 .day-date{font-size:12px;font-weight:600;color:#1a3a5c;background:rgba(26,58,92,.08);border-radius:4px;padding:2px 9px;min-width:60px;text-align:center}
 .day-date.today{background:#c9a84c;color:#fff}
-thead th.th-weekend .day-date{background:rgba(26,58,92,.12)}
-
 tbody tr{border-bottom:1.5px solid rgba(26,58,92,.1)}
 tbody td{padding:0;height:120px;border-right:1px solid rgba(26,58,92,.07);vertical-align:top;transition:background .15s}
 tbody td:last-child{border-right:none}
@@ -87,13 +65,10 @@ tbody td.td-weekend{background:rgba(210,190,150,.07)!important}
 tbody td.td-booked{background:rgba(26,58,92,.07)!important;border-left:3px solid #1a3a5c!important}
 tbody td.td-booked.sport-tennis{background:rgba(45,125,50,.07)!important;border-left-color:#2d7d32!important}
 tbody td.td-booked.sport-calcio{background:rgba(200,75,0,.07)!important;border-left-color:#c84b00!important}
-
 .slot-label{font-family:'Cormorant Garamond',serif;font-size:18px;color:#1a3a5c;font-weight:700;display:block;line-height:1.1}
 .slot-sub{font-size:10px;color:#8c8ca4;display:block;margin-top:2px}
 .btn-del-slot{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);background:none;border:none;cursor:pointer;color:#ccc;font-size:14px;padding:2px 6px;border-radius:4px;transition:color .15s}
 .btn-del-slot:hover{color:#dc3545}
-
-/* CELL */
 .cell{padding:6px 8px;height:100%;display:flex;flex-direction:column;gap:4px;position:relative}
 .cell-booked-tag{display:none;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:#1a3a5c;border-radius:3px;padding:1px 6px;align-self:flex-start;margin-bottom:1px}
 .sport-tennis .cell-booked-tag{background:#2d7d32}
@@ -103,27 +78,18 @@ td.td-booked .cell-booked-tag{display:inline-block}
 .field{display:flex;flex-direction:column;gap:1px}
 .fl{font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:#bbb;font-weight:700}
 .fi{border:none;border-bottom:1px solid rgba(26,58,92,.18);background:transparent;font-family:'Manrope',sans-serif;font-size:11.5px;color:#1a3a5c;outline:none;width:100%;padding:1px 0;transition:border-color .15s}
-.fi.c-tennis{border-bottom-color:rgba(45,125,50,.3)}
-.fi.c-calcio{border-bottom-color:rgba(200,75,0,.3)}
+.fi.c-tennis{border-bottom-color:rgba(45,125,50,.3)}.fi.c-calcio{border-bottom-color:rgba(200,75,0,.3)}
 .fi:focus{border-bottom-width:2px;border-bottom-color:#1a3a5c}
-.fi.c-tennis:focus{border-bottom-color:#2d7d32}
-.fi.c-calcio:focus{border-bottom-color:#c84b00}
-
-/* FOOTER */
+.fi.c-tennis:focus{border-bottom-color:#2d7d32}.fi.c-calcio:focus{border-bottom-color:#c84b00}
 .footer{display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(26,58,92,.1);padding-top:12px;margin-top:18px;font-size:10px;color:#aaa;letter-spacing:.05em;flex-wrap:wrap;gap:8px}
 .footer-stats{display:flex;gap:10px}
 .stat{font-size:11px;font-weight:700;padding:3px 11px;border-radius:12px}
-.stat.padel{background:#e8edf5;color:#1a3a5c}
-.stat.tennis{background:#e8f5e9;color:#2d7d32}
-.stat.calcio{background:#fff0e6;color:#c84b00}
-
-/* TOAST */
+.stat.padel{background:#e8edf5;color:#1a3a5c}.stat.tennis{background:#e8f5e9;color:#2d7d32}.stat.calcio{background:#fff0e6;color:#c84b00}
 .toast{position:fixed;bottom:22px;right:22px;padding:11px 18px;border-radius:8px;font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;z-index:9999;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none;max-width:320px}
 .toast.show{opacity:1;transform:translateY(0)}
 .toast.success{background:#d1e7dd;color:#0a3622;border:1px solid #a3cfbb}
 .toast.info{background:#e8edf5;color:#1a3a5c;border:1px solid #1a3a5c44}
 .toast.error{background:#f8d7da;color:#842029;border:1px solid #f1aeb5}
-
 @media print{
   body{background:#fff;padding:0}
   .header .btn-row,.tabs,.footer,.add-slot-bar,.btn-del-slot{display:none}
@@ -135,39 +101,26 @@ td.td-booked .cell-booked-tag{display:inline-block}
 </head>
 <body>
 <div class="page">
-
 <div class="header">
   <div class="brand">
     <div class="title">Registro Prenotazione Campi</div>
     <div class="subtitle">Padel &nbsp;·&nbsp; Tennis &nbsp;·&nbsp; Calcio &nbsp;—&nbsp; Gestione Settimanale</div>
   </div>
   <div class="controls">
-    <div class="ctrl-group">
-      <span class="ctrl-label">Dal (Lunedì)</span>
-      <input class="ctrl-input" id="date-from" type="text" placeholder="gg/mm/aaaa" autocomplete="off" maxlength="10">
-    </div>
-    <div class="ctrl-group">
-      <span class="ctrl-label">Al (Domenica)</span>
-      <input class="ctrl-input" id="date-to" type="text" placeholder="—" readonly>
-    </div>
-    <div class="ctrl-group">
-      <span class="ctrl-label">Responsabile</span>
-      <input class="ctrl-input" id="responsabile" type="text" placeholder="Nome...">
-    </div>
-    <div class="ctrl-group">
-      <span class="ctrl-label">Stato</span>
-      <span class="status idle" id="status-bar">Pronto</span>
-    </div>
+    <div class="ctrl-group"><span class="ctrl-label">Dal (Lunedì)</span><input class="ctrl-input" id="date-from" type="text" placeholder="gg/mm/aaaa" autocomplete="off" maxlength="10"></div>
+    <div class="ctrl-group"><span class="ctrl-label">Al (Domenica)</span><input class="ctrl-input" id="date-to" type="text" placeholder="—" readonly></div>
+    <div class="ctrl-group"><span class="ctrl-label">Responsabile</span><input class="ctrl-input" id="responsabile" type="text" placeholder="Nome..."></div>
+    <div class="ctrl-group"><span class="ctrl-label">Stato</span><span class="status idle" id="status-bar">Pronto</span></div>
     <div class="btn-row">
       <button class="btn btn-today" onclick="goToCurrentWeek()">📅 Questa settimana</button>
-      <button class="btn btn-outline" onclick="loadPrevWeek()">← Prec.</button>
+      <button class="btn btn-outline" onclick="navWeek(-1)">← Prec.</button>
+      <button class="btn btn-outline" onclick="navWeek(1)">Succ. →</button>
       <button class="btn btn-ghost" onclick="window.print()">🖨 Stampa</button>
       <button class="btn btn-danger" onclick="clearAllConfirm()">🗑 Svuota</button>
       <button class="btn btn-primary" id="btn-save" onclick="saveAll()">💾 Salva</button>
     </div>
   </div>
 </div>
-
 <div class="tabs">
   <button class="tab-btn padel active" id="tab-padel1" onclick="showCampo('padel1')">🎾 Padel 1 <span class="badge" id="cnt-padel1">0</span></button>
   <button class="tab-btn padel" id="tab-padel2" onclick="showCampo('padel2')">🎾 Padel 2 <span class="badge" id="cnt-padel2">0</span></button>
@@ -175,9 +128,7 @@ td.td-booked .cell-booked-tag{display:inline-block}
   <button class="tab-btn tennis" id="tab-tennis2" onclick="showCampo('tennis2')">🎾 Tennis 2 <span class="badge" id="cnt-tennis2">0</span></button>
   <button class="tab-btn calcio" id="tab-calcio" onclick="showCampo('calcio')">⚽ Calcio <span class="badge" id="cnt-calcio">0</span></button>
 </div>
-
 <div id="views-container"></div>
-
 <div class="footer">
   <span id="footer-info">Nessuna settimana selezionata</span>
   <div class="footer-stats">
@@ -186,121 +137,144 @@ td.td-booked .cell-booked-tag{display:inline-block}
     <span class="stat calcio" id="stat-calcio">Calcio: 0</span>
   </div>
 </div>
-
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
-const CAMPI  = ['padel1','padel2','tennis1','tennis2','calcio'];
-const SPORT  = {padel1:'padel',padel2:'padel',tennis1:'tennis',tennis2:'tennis',calcio:'calcio'};
-const DAYS   = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'];
-const WEEKEND= [5,6];
-const FIELDS = ['nome','tel','istr','importo'];
-const F_LABEL= {nome:'Nome',tel:'Telefono',istr:'Istruttore',importo:'Importo'};
-
-// Slot di default per ogni campo (modificabili)
+const CAMPI   = ['padel1','padel2','tennis1','tennis2','calcio'];
+const SPORT   = {padel1:'padel',padel2:'padel',tennis1:'tennis',tennis2:'tennis',calcio:'calcio'};
+const DAYS    = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'];
+const WEEKEND = [5,6];
+const FIELDS  = ['nome','tel','istr','importo'];
+const F_LABEL = {nome:'Nome',tel:'Telefono',istr:'Istruttore',importo:'Importo'};
 const DEFAULT_SLOTS = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00'];
 
-// Stato in memoria: slot personalizzati per campo
 let campoSlots = {};
 CAMPI.forEach(c => { campoSlots[c] = [...DEFAULT_SLOTS]; });
 
-// ─ UTILS DATE ───────────────────────────────────────────────────────────
+// ── DATE UTILS ──────────────────────────────────────────────────
 function parseIT(str) {
-  const p = str.split('/');
+  if (!str) return null;
+  const p = str.trim().split('/');
   if (p.length !== 3) return null;
-  const dt = new Date(parseInt(p[2]), parseInt(p[1])-1, parseInt(p[0]));
+  const dt = new Date(+p[2], +p[1]-1, +p[0]);
   return isNaN(dt) ? null : dt;
 }
-function fmtIT(dt) { return dt.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'}); }
-function fmtShort(dt) { return dt.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit'}); }
-function getMondayOfWeek(d) {
-  const dt = new Date(d), day = dt.getDay();
-  dt.setDate(dt.getDate() + ((day===0)?-6:1-day));
-  dt.setHours(0,0,0,0); return dt;
+function fmtIT(dt) {
+  return String(dt.getDate()).padStart(2,'0') + '/' +
+         String(dt.getMonth()+1).padStart(2,'0') + '/' + dt.getFullYear();
+}
+function fmtShort(dt) {
+  return String(dt.getDate()).padStart(2,'0') + '/' + String(dt.getMonth()+1).padStart(2,'0');
+}
+function getMondayOf(d) {
+  const dt = new Date(d); dt.setHours(0,0,0,0);
+  const day = dt.getDay();
+  dt.setDate(dt.getDate() + (day===0 ? -6 : 1-day));
+  return dt;
 }
 function todayMidnight() { const d=new Date(); d.setHours(0,0,0,0); return d; }
 
-// ─ SLOT TIME HELPERS ─────────────────────────────────────────────────────
+// ── TIME UTILS ──────────────────────────────────────────────────
 function normalizeTime(str) {
-  // Accetta: "9", "9:30", "09:30", "930", "9.30" → "09:30"
-  str = str.trim().replace('.',':').replace(',',':');
+  str = str.trim().replace(/[.,]/g,':');
   let h, m = '00';
-  if (str.includes(':')) {
-    [h, m] = str.split(':');
-  } else if (str.length <= 2) {
-    h = str;
-  } else {
-    h = str.slice(0, -2);
-    m = str.slice(-2);
-  }
+  if (str.includes(':')) { [h,m] = str.split(':'); }
+  else if (str.length <= 2) { h = str; }
+  else { h = str.slice(0,-2); m = str.slice(-2); }
   h = parseInt(h); m = parseInt(m);
   if (isNaN(h)||isNaN(m)||h<0||h>23||m<0||m>59) return null;
-  return (h<10?'0':'')+h+':'+(m<10?'0':'')+m;
+  return h.toString().padStart(2,'0')+':'+m.toString().padStart(2,'0');
 }
 function nextHour(t) {
   const [h,m] = t.split(':').map(Number);
-  const nh = (h+1)%24;
-  return (nh<10?'0':'')+nh+':'+(m<10?'0':'')+m;
+  return ((h+1)%24).toString().padStart(2,'0')+':'+m.toString().padStart(2,'0');
 }
 function slotKey(t) { return t.replace(':',''); }
 
-// ─ RENDER CAMPO ────────────────────────────────────────────────────────────
+// ── STORAGE KEYS ────────────────────────────────────────────────
+function weekKey(s) { return s ? 'rc_' + s.replace(/\//g,'_') : null; }
+function currentWeekKey() { return weekKey(document.getElementById('date-from').value.trim()); }
+
+// ── UPDATE FOOTER + DATE-TO (NO render) ───────────────────────────────
+function syncWeekMeta(from) {
+  // Aggiorna solo date-to e footer, senza toccare il DOM delle tabelle
+  if (!from) {
+    document.getElementById('date-to').value = '';
+    document.getElementById('footer-info').textContent = 'Nessuna settimana selezionata';
+    return;
+  }
+  const sun = new Date(from); sun.setDate(from.getDate()+6);
+  document.getElementById('date-to').value = fmtIT(sun);
+  document.getElementById('footer-info').textContent =
+    `Settimana ${fmtIT(from)} – ${fmtIT(sun)} · Responsabile: ${document.getElementById('responsabile').value||'—'}`;
+}
+
+// ── UPDATE SOLO LE DATE NEGLI HEADER DELLE TABELLE (NO rebuild HTML) ─────────
+function refreshDateHeaders(from) {
+  const today = todayMidnight();
+  // Ogni campo ha i propri span .day-date con data-campo e data-day-idx
+  CAMPI.forEach(campo => {
+    const view = document.getElementById('view-'+campo);
+    if (!view) return;
+    view.querySelectorAll('.day-date[data-day-idx]').forEach(el => {
+      const i = parseInt(el.dataset.dayIdx);
+      if (!from) { el.textContent = '—'; el.classList.remove('today'); return; }
+      const d = new Date(from); d.setDate(from.getDate()+i);
+      el.textContent = fmtShort(d);
+      el.classList.toggle('today', d.getTime()===today.getTime());
+    });
+  });
+}
+
+// ── RENDER CAMPO (costruisce HTML, NON tocca date-to/footer) ─────────────
 function renderCampo(campo) {
   const sport = SPORT[campo];
   const cc = sport==='padel' ? '' : 'c-'+sport;
   const slots = campoSlots[campo];
-  const fromStr = document.getElementById('date-from').value.trim();
-  const from = parseIT(fromStr);
-  const today = todayMidnight();
 
   // Add-slot bar
   let html = `<div class="add-slot-bar">
     <label>Aggiungi orario:</label>
-    <input class="slot-time-input" id="new-slot-start-${campo}" placeholder="09:30" maxlength="5">
-    <span class="add-sep">→</span>
-    <input class="slot-time-input" id="new-slot-end-${campo}" placeholder="11:00" maxlength="5">
+    <input class="slot-time-input" id="nss-${campo}" placeholder="09:30" maxlength="5">
+    <span style="color:#ccc">→</span>
+    <input class="slot-time-input" id="nse-${campo}" placeholder="11:00" maxlength="5">
     <button class="btn-add-slot" onclick="addSlot('${campo}')">+ Aggiungi slot</button>
-    <span style="font-size:10px;color:#aaa;margin-left:6px">Formato: HH:MM &nbsp;·&nbsp; Es: 09:30 → 11:00</span>
+    <span style="font-size:10px;color:#aaa;margin-left:6px">Es: 09:30 → 11:00 &nbsp;·&nbsp; 00:00–23:59</span>
   </div>`;
 
-  // Table
+  // Table header — le date vengono inserite vuote e populate da refreshDateHeaders()
   html += `<table><thead><tr><th class="th-time">Orario</th>`;
   DAYS.forEach((d,i) => {
     const wk = WEEKEND.includes(i) ? ' th-weekend' : '';
-    let dateStr = '—', isToday = false;
-    if (from) {
-      const dd = new Date(from); dd.setDate(from.getDate()+i);
-      dateStr = fmtShort(dd);
-      isToday = dd.getTime()===today.getTime();
-    }
-    html += `<th class="th-day${wk}"><div class="day-header"><span class="day-name">${d}</span><span class="day-date${isToday?' today':''}">${dateStr}</span></div></th>`;
+    html += `<th class="th-day${wk}"><div class="day-header">
+      <span class="day-name">${d}</span>
+      <span class="day-date" data-day-idx="${i}">—</span>
+    </div></th>`;
   });
   html += `</tr></thead><tbody>`;
 
-  if (slots.length === 0) {
-    html += `<tr><td class="td-time" colspan="8" style="text-align:center;color:#aaa;font-size:12px;padding:20px">Nessun orario aggiunto. Usa la barra qui sopra per aggiungere slot.</td></tr>`;
+  if (!slots.length) {
+    html += `<tr><td colspan="8" style="text-align:center;color:#aaa;font-size:12px;padding:24px">Nessun orario — usa la barra sopra per aggiungere slot.</td></tr>`;
   } else {
     slots.forEach(slot => {
-      const end = nextHour(slot);
-      html += `<tr data-slot="${slot}" data-campo="${campo}">
-        <td class="td-time">
-          <span class="slot-label">${slot}</span>
-          <span class="slot-sub">↓ ${end}</span>
-          <button class="btn-del-slot" onclick="removeSlot('${campo}','${slot}')" title="Rimuovi orario">✕</button>
-        </td>`;
-      DAYS.forEach((d,di) => {
+      html += `<tr><td class="td-time">
+        <span class="slot-label">${slot}</span>
+        <span class="slot-sub">↓ ${nextHour(slot)}</span>
+        <button class="btn-del-slot" onclick="removeSlot('${campo}','${slot}')" title="Rimuovi">✕</button>
+      </td>`;
+      DAYS.forEach((_,di) => {
         const wkc = WEEKEND.includes(di) ? ' td-weekend' : '';
         html += `<td class="${wkc}" id="td-${campo}-${slotKey(slot)}-${di}">
           <div class="cell" data-campo="${campo}" data-slot="${slot}" data-day="${di}">
             <span class="cell-booked-tag">Prenotato</span>
             <div class="cell-row">
-              <div class="field"><span class="fl">${F_LABEL.nome}</span><input class="fi ${cc} fi-nome" type="text" placeholder="—" autocomplete="off"></div>
-              <div class="field"><span class="fl">${F_LABEL.tel}</span><input class="fi ${cc} fi-tel" type="tel" placeholder="—" autocomplete="off"></div>
+              <div class="field"><span class="fl">Nome</span><input class="fi ${cc} fi-nome" type="text" placeholder="—" autocomplete="off"></div>
+              <div class="field"><span class="fl">Telefono</span><input class="fi ${cc} fi-tel" type="tel" placeholder="—" autocomplete="off"></div>
             </div>
             <div class="cell-row">
-              <div class="field"><span class="fl">${F_LABEL.istr}</span><input class="fi ${cc} fi-istr" type="text" placeholder="—" autocomplete="off"></div>
-              <div class="field"><span class="fl">${F_LABEL.importo}</span><input class="fi ${cc} fi-importo" type="text" placeholder="€" autocomplete="off"></div>
+              <div class="field"><span class="fl">Istruttore</span><input class="fi ${cc} fi-istr" type="text" placeholder="—" autocomplete="off"></div>
+              <div class="field"><span class="fl">Importo</span><input class="fi ${cc} fi-importo" type="text" placeholder="€" autocomplete="off"></div>
             </div>
           </div>
         </td>`;
@@ -313,88 +287,91 @@ function renderCampo(campo) {
   const view = document.getElementById('view-'+campo);
   view.innerHTML = html;
 
-  // Listener input
   view.querySelectorAll('.fi').forEach(inp => {
-    inp.addEventListener('input', () => {
-      refreshCellState(inp.closest('.cell'));
-      updateCounters();
-    });
+    inp.addEventListener('input', () => { refreshCellState(inp.closest('.cell')); updateCounters(); });
   });
-
-  // Enter su add-slot
-  const si = document.getElementById('new-slot-start-'+campo);
-  const ei = document.getElementById('new-slot-end-'+campo);
-  if (si) si.addEventListener('keydown', e => { if(e.key==='Enter') { ei.focus(); } });
+  const si = document.getElementById('nss-'+campo);
+  const ei = document.getElementById('nse-'+campo);
+  if (si) si.addEventListener('keydown', e => { if(e.key==='Enter') ei && ei.focus(); });
   if (ei) ei.addEventListener('keydown', e => { if(e.key==='Enter') addSlot(campo); });
 }
 
-function renderAllCampi() {
-  CAMPI.forEach(renderCampo);
-}
+function renderAllCampi() { CAMPI.forEach(renderCampo); }
 
-// ─ BUILD VIEWS (solo struttura, poi renderCampo riempie) ────────────────────
+// ── INIT VIEWS ─────────────────────────────────────────────────────
 function buildViews() {
-  const container = document.getElementById('views-container');
+  const c = document.getElementById('views-container');
   CAMPI.forEach((campo,ci) => {
     const div = document.createElement('div');
-    div.className = 'campo-view' + (ci===0?' active':'');
+    div.className = 'campo-view'+(ci===0?' active':'');
     div.id = 'view-'+campo;
-    container.appendChild(div);
+    c.appendChild(div);
   });
   renderAllCampi();
 }
 
-// ─ ADD / REMOVE SLOT ────────────────────────────────────────────────────────
+// ── ADD / REMOVE SLOT ────────────────────────────────────────────────
 function addSlot(campo) {
-  const startEl = document.getElementById('new-slot-start-'+campo);
-  const endEl   = document.getElementById('new-slot-end-'+campo);
-  const startRaw = startEl.value.trim();
-  const endRaw   = endEl.value.trim();
+  const si = document.getElementById('nss-'+campo);
+  const ei = document.getElementById('nse-'+campo);
+  const start = normalizeTime(si.value);
+  if (!start) { showToast('⚠️ Orario non valido (es: 09:30)','error'); si.focus(); return; }
+  if (campoSlots[campo].includes(start)) { showToast('ℹ️ Orario '+start+' già presente','info'); return; }
 
-  const start = normalizeTime(startRaw);
-  if (!start) { showToast('⚠️ Orario di inizio non valido (es: 09:30)', 'error'); startEl.focus(); return; }
+  const endRaw = ei.value.trim();
+  const end = endRaw ? normalizeTime(endRaw) : nextHour(start);
+  if (!end) { showToast('⚠️ Orario di fine non valido','error'); ei.focus(); return; }
 
-  // end è opzionale: se vuoto uso +1h
-  let end = endRaw ? normalizeTime(endRaw) : nextHour(start);
-  if (!end) { showToast('⚠️ Orario di fine non valido', 'error'); endEl.focus(); return; }
-
-  // Controlla duplicato
-  if (campoSlots[campo].includes(start)) {
-    showToast('ℹ️ Orario ' + start + ' già presente', 'info'); return;
-  }
-
-  // Raccoglie dati esistenti prima del re-render
-  const existingData = collectCampoData(campo);
+  const existing = collectCampoData(campo);
+  const from = parseIT(document.getElementById('date-from').value.trim());
 
   campoSlots[campo].push(start);
   campoSlots[campo].sort();
-
   renderCampo(campo);
-  restoreCampoData(campo, existingData);
+  restoreCampoData(campo, existing);
+  refreshDateHeaders(from);   // ← aggiorna le date senza loop
   updateCounters();
 
-  startEl.value = '';
-  endEl.value = '';
-  startEl.focus();
-  showToast('✅ Slot ' + start + ' → ' + end + ' aggiunto', 'success');
+  si.value = ''; ei.value = ''; si.focus();
+  showToast('✅ Slot '+start+' → '+end+' aggiunto','success');
 }
 
 function removeSlot(campo, slot) {
-  if (!confirm(`Rimuovere lo slot ${slot} da ${campo}?\nI dati inseriti in questo orario andranno persi.`)) return;
-  const existingData = collectCampoData(campo);
-  campoSlots[campo] = campoSlots[campo].filter(s => s !== slot);
+  if (!confirm(`Rimuovere lo slot ${slot}?\nI dati in questo orario andranno persi.`)) return;
+  const existing = collectCampoData(campo);
+  const from = parseIT(document.getElementById('date-from').value.trim());
+  campoSlots[campo] = campoSlots[campo].filter(s=>s!==slot);
   renderCampo(campo);
-  // Ripristina dati (eccetto lo slot rimosso)
-  const filtered = {};
-  Object.entries(existingData).forEach(([k,v]) => {
-    if (!k.startsWith(`${campo}||${slot}||`)) filtered[k] = v;
-  });
+  const filtered = Object.fromEntries(Object.entries(existing).filter(([k])=>!k.startsWith(`${campo}||${slot}||`)));
   restoreCampoData(campo, filtered);
+  refreshDateHeaders(from);   // ← aggiorna le date senza loop
   updateCounters();
-  showToast(`🗑 Slot ${slot} rimosso`, 'info');
+  showToast('🗑 Slot '+slot+' rimosso','info');
 }
 
-// ─ CELL STATE ────────────────────────────────────────────────────────────────
+// ── COLLECT / RESTORE ──────────────────────────────────────────────────
+function collectCampoData(campo) {
+  const data = {};
+  document.querySelectorAll(`.cell[data-campo="${campo}"]`).forEach(cell => {
+    const k = `${cell.dataset.campo}||${cell.dataset.slot}||${cell.dataset.day}`;
+    const entry = {};
+    FIELDS.forEach(f => { entry[f] = cell.querySelector('.fi-'+f)?.value||''; });
+    if (FIELDS.some(f=>entry[f])) data[k] = entry;
+  });
+  return data;
+}
+function restoreCampoData(campo, data) {
+  Object.entries(data).forEach(([k,v]) => {
+    const [c,slot,day] = k.split('||');
+    if (c!==campo) return;
+    const cell = document.querySelector(`.cell[data-campo="${c}"][data-slot="${slot}"][data-day="${day}"]`);
+    if (!cell) return;
+    FIELDS.forEach(f => { const inp=cell.querySelector('.fi-'+f); if(inp) inp.value=v[f]||''; });
+    refreshCellState(cell);
+  });
+}
+
+// ── CELL STATE ─────────────────────────────────────────────────────────
 function refreshCellState(cell) {
   if (!cell) return;
   const td = cell.closest('td'); if (!td) return;
@@ -404,30 +381,7 @@ function refreshCellState(cell) {
   if (nome) { td.classList.add('td-booked'); if(sport!=='padel') td.classList.add('sport-'+sport); }
 }
 
-// ─ COLLECT / RESTORE DATA PER CAMPO ───────────────────────────────────────
-function collectCampoData(campo) {
-  const data = {};
-  document.querySelectorAll(`.cell[data-campo="${campo}"]`).forEach(cell => {
-    const k = `${cell.dataset.campo}||${cell.dataset.slot}||${cell.dataset.day}`;
-    const entry = {};
-    FIELDS.forEach(f => { entry[f] = cell.querySelector(`.fi-${f}`)?.value||''; });
-    if (FIELDS.some(f=>entry[f])) data[k] = entry;
-  });
-  return data;
-}
-
-function restoreCampoData(campo, data) {
-  Object.entries(data).forEach(([k, v]) => {
-    const [c, slot, day] = k.split('||');
-    if (c !== campo) return;
-    const cell = document.querySelector(`.cell[data-campo="${c}"][data-slot="${slot}"][data-day="${day}"]`);
-    if (!cell) return;
-    FIELDS.forEach(f => { const inp=cell.querySelector(`.fi-${f}`); if(inp) inp.value=v[f]||''; });
-    refreshCellState(cell);
-  });
-}
-
-// ─ TAB SWITCH ────────────────────────────────────────────────────────────────
+// ── TAB SWITCH ──────────────────────────────────────────────────────────
 function showCampo(campo) {
   document.querySelectorAll('.campo-view').forEach(v=>v.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -435,81 +389,34 @@ function showCampo(campo) {
   document.getElementById('tab-'+campo).classList.add('active');
 }
 
-// ─ HEADER DATES ────────────────────────────────────────────────────────────
-function updateHeaderDates() {
-  const fromStr = document.getElementById('date-from').value.trim();
-  const from = parseIT(fromStr);
-  const today = todayMidnight();
-  // Aggiorna tutte le date negli header delle tabelle
-  document.querySelectorAll('[data-day-offset]').forEach(el => {
-    if (!from) { el.textContent='—'; el.classList.remove('today'); return; }
-    const d=new Date(from); d.setDate(from.getDate()+parseInt(el.dataset.dayOffset));
-    el.textContent=fmtShort(d);
-    el.classList.toggle('today', d.getTime()===today.getTime());
-  });
-  if (from) {
-    const sun=new Date(from); sun.setDate(from.getDate()+6);
-    document.getElementById('date-to').value=fmtIT(sun);
-    document.getElementById('footer-info').textContent=
-      `Settimana ${fmtIT(from)} – ${fmtIT(sun)} · Responsabile: ${document.getElementById('responsabile').value||'—'}`;
-  } else {
-    document.getElementById('date-to').value='';
-    document.getElementById('footer-info').textContent='Nessuna settimana selezionata';
-  }
-  // Re-render per aggiornare le date nell'header della tabella
-  renderAllCampi();
-  // Dopo re-render, ricarica i dati in memoria se ci sono
-  const key = currentWeekKey();
-  if (key) {
-    const raw = localStorage.getItem(key);
-    if (raw) try {
-      const saved = JSON.parse(raw);
-      if (saved.slots) {
-        Object.entries(saved.slots).forEach(([k,v]) => {
-          const [c,slot,day] = k.split('||');
-          const cell = document.querySelector(`.cell[data-campo="${c}"][data-slot="${slot}"][data-day="${day}"]`);
-          if (!cell) return;
-          FIELDS.forEach(f=>{ const inp=cell.querySelector(`.fi-${f}`); if(inp) inp.value=v[f]||''; });
-          refreshCellState(cell);
-        });
-      }
-      updateCounters();
-    } catch(e){}
-  }
-}
-
-// ─ STORAGE KEY ──────────────────────────────────────────────────────────────
-function weekKey(s){ return s?'rc_'+s.replace(/\//g,'_'):null; }
-function currentWeekKey(){ return weekKey(document.getElementById('date-from').value.trim()); }
-
-// ─ SAVE ──────────────────────────────────────────────────────────────────────
+// ── SAVE ─────────────────────────────────────────────────────────────────
 function saveAll() {
   const key = currentWeekKey();
-  if (!key) { showToast('⚠️ Inserisci prima la data di inizio settimana', 'error'); return; }
+  if (!key) { showToast('⚠️ Inserisci prima la data di inizio settimana','error'); return; }
   const btn=document.getElementById('btn-save'), bar=document.getElementById('status-bar');
   btn.disabled=true; bar.className='status saving'; bar.textContent='Salvataggio...';
   try {
-    const data = {
-      meta:{
+    const payload = {
+      meta: {
         dateFrom: document.getElementById('date-from').value.trim(),
-        dateTo: document.getElementById('date-to').value,
+        dateTo:   document.getElementById('date-to').value,
         responsabile: document.getElementById('responsabile').value,
         savedAt: new Date().toISOString()
       },
-      campoSlots: JSON.parse(JSON.stringify(campoSlots)), // salva anche gli orari personalizzati
-      slots:{}
+      campoSlots: JSON.parse(JSON.stringify(campoSlots)),
+      slots: {}
     };
     document.querySelectorAll('.cell').forEach(cell => {
-      const k=`${cell.dataset.campo}||${cell.dataset.slot}||${cell.dataset.day}`;
-      const entry={};
-      FIELDS.forEach(f=>{ entry[f]=cell.querySelector(`.fi-${f}`)?.value||''; });
-      if(FIELDS.some(f=>entry[f])) data.slots[k]=entry;
+      const k = `${cell.dataset.campo}||${cell.dataset.slot}||${cell.dataset.day}`;
+      const entry = {};
+      FIELDS.forEach(f => { entry[f] = cell.querySelector('.fi-'+f)?.value||''; });
+      if (FIELDS.some(f=>entry[f])) payload.slots[k] = entry;
     });
-    localStorage.setItem(key, JSON.stringify(data));
-    let idx=JSON.parse(localStorage.getItem('rc_index')||'[]');
-    idx=[key,...idx.filter(k2=>k2!==key)];
-    if(idx.length>104) idx.pop();
-    localStorage.setItem('rc_index',JSON.stringify(idx));
+    localStorage.setItem(key, JSON.stringify(payload));
+    let idx = JSON.parse(localStorage.getItem('rc_index')||'[]');
+    idx = [key, ...idx.filter(k2=>k2!==key)];
+    if (idx.length>104) idx.pop();
+    localStorage.setItem('rc_index', JSON.stringify(idx));
     bar.className='status saved'; bar.textContent='✓ Salvato';
     showToast('✅ Settimana salvata!','success');
     setTimeout(()=>{ bar.className='status idle'; bar.textContent='Pronto'; },3000);
@@ -519,117 +426,132 @@ function saveAll() {
   } finally { btn.disabled=false; }
 }
 
-// ─ LOAD ──────────────────────────────────────────────────────────────────────
+// ── LOAD WEEK DATA ────────────────────────────────────────────────────
 function loadWeekData(key) {
   if (!key) return false;
   const raw = localStorage.getItem(key);
   if (!raw) return false;
   try {
     const data = JSON.parse(raw);
+    // 1. Ripristina meta
     if (data.meta) {
-      document.getElementById('date-from').value = data.meta.dateFrom||'';
-      document.getElementById('responsabile').value = data.meta.responsabile||'';
+      document.getElementById('date-from').value      = data.meta.dateFrom||'';
+      document.getElementById('responsabile').value   = data.meta.responsabile||'';
     }
-    // Ripristina slot personalizzati
+    // 2. Ripristina slot personalizzati
     if (data.campoSlots) {
       CAMPI.forEach(c => { if(data.campoSlots[c]) campoSlots[c]=[...data.campoSlots[c]]; });
     }
+    // 3. Ricostruisce HTML tabelle
     renderAllCampi();
-    updateHeaderDates();
+    // 4. Aggiorna date negli header (una sola volta, senza loop)
+    const from = parseIT(document.getElementById('date-from').value.trim());
+    refreshDateHeaders(from);
+    syncWeekMeta(from);
+    // 5. Popola i dati nelle celle
     if (data.slots) {
       Object.entries(data.slots).forEach(([k,v]) => {
-        const [campo,slot,day]=k.split('||');
-        const cell=document.querySelector(`.cell[data-campo="${campo}"][data-slot="${slot}"][data-day="${day}"]`);
-        if(!cell) return;
-        FIELDS.forEach(f=>{ const inp=cell.querySelector(`.fi-${f}`); if(inp) inp.value=v[f]||''; });
+        const [campo,slot,day] = k.split('||');
+        const cell = document.querySelector(`.cell[data-campo="${campo}"][data-slot="${slot}"][data-day="${day}"]`);
+        if (!cell) return;
+        FIELDS.forEach(f => { const inp=cell.querySelector('.fi-'+f); if(inp) inp.value=v[f]||''; });
         refreshCellState(cell);
       });
     }
-    updateCounters(); return true;
-  } catch(e){ console.error(e); return false; }
+    updateCounters();
+    return true;
+  } catch(e) { console.error(e); return false; }
 }
 
-// ─ CLEAR ─────────────────────────────────────────────────────────────────────
+// ── CLEAR ────────────────────────────────────────────────────────────────
 function clearInputs() {
-  document.querySelectorAll('.fi').forEach(inp=>inp.value='');
+  document.querySelectorAll('.fi').forEach(i=>i.value='');
   document.querySelectorAll('td.td-booked').forEach(td=>td.classList.remove('td-booked','sport-tennis','sport-calcio'));
   updateCounters();
 }
 function clearAllConfirm() {
-  if(!confirm('Svuotare tutti i dati della settimana?\n(Gli orari personalizzati vengono mantenuti.)')) return;
+  if (!confirm('Svuotare tutti i dati della settimana?\n(Gli orari personalizzati vengono mantenuti.)')) return;
   clearInputs(); showToast('🗑 Foglio svuotato','info');
 }
 
-// ─ SWITCH SETTIMANA ──────────────────────────────────────────────────────────
+// ── SWITCH SETTIMANA ────────────────────────────────────────────────────
 function switchToWeek(fromStr) {
-  // Reset slot ai default prima di caricare
-  CAMPI.forEach(c=>{ campoSlots[c]=[...DEFAULT_SLOTS]; });
-  clearInputs();
-  document.getElementById('date-from').value=fromStr;
-  const key=weekKey(fromStr);
-  const found=loadWeekData(key);
-  showToast(found?'📂 Dati caricati per '+fromStr:'📋 Nuova settimana: '+fromStr, found?'success':'info');
-}
-
-function goToCurrentWeek() { switchToWeek(fmtIT(getMondayOfWeek(new Date()))); }
-
-function loadPrevWeek() {
-  const fromStr=document.getElementById('date-from').value.trim();
-  if (fromStr) {
-    const from=parseIT(fromStr);
-    if (from) { const p=new Date(from); p.setDate(from.getDate()-7); switchToWeek(fmtIT(p)); return; }
+  // Reset slot ai default
+  CAMPI.forEach(c => { campoSlots[c] = [...DEFAULT_SLOTS]; });
+  // Imposta la data nel campo
+  document.getElementById('date-from').value = fromStr;
+  const from = parseIT(fromStr);
+  // Prova a caricare settimana salvata
+  const key = weekKey(fromStr);
+  const found = loadWeekData(key);
+  if (!found) {
+    // Settimana nuova: render pulito + aggiorna date
+    renderAllCampi();
+    refreshDateHeaders(from);
+    syncWeekMeta(from);
+    updateCounters();
   }
-  const idx=JSON.parse(localStorage.getItem('rc_index')||'[]');
-  if(idx.length>0){ clearInputs(); loadWeekData(idx[0]); showToast('📂 Ultima settimana caricata','success'); }
-  else showToast('ℹ️ Nessuna settimana salvata','info');
+  showToast(found ? '📂 Dati caricati: '+fromStr : '📋 Nuova settimana: '+fromStr, found?'success':'info');
 }
 
-// ─ COUNTERS ─────────────────────────────────────────────────────────────────
+function goToCurrentWeek() { switchToWeek(fmtIT(getMondayOf(new Date()))); }
+
+function navWeek(dir) {
+  const fromStr = document.getElementById('date-from').value.trim();
+  const from = parseIT(fromStr);
+  if (!from) { showToast('⚠️ Inserisci prima una data valida','error'); return; }
+  const next = new Date(from); next.setDate(from.getDate() + dir*7);
+  switchToWeek(fmtIT(next));
+}
+
+// ── COUNTERS ─────────────────────────────────────────────────────────────
 function updateCounters() {
-  const counts={padel1:0,padel2:0,tennis1:0,tennis2:0,calcio:0};
-  document.querySelectorAll('.cell').forEach(cell=>{
-    if(cell.querySelector('.fi-nome')?.value?.trim()) counts[cell.dataset.campo]++;
+  const c = {padel1:0,padel2:0,tennis1:0,tennis2:0,calcio:0};
+  document.querySelectorAll('.cell').forEach(cell => {
+    if (cell.querySelector('.fi-nome')?.value?.trim()) c[cell.dataset.campo]++;
   });
-  CAMPI.forEach(c=>{ const el=document.getElementById('cnt-'+c); if(el) el.textContent=counts[c]||'0'; });
-  document.getElementById('stat-padel').textContent =`Padel: ${counts.padel1+counts.padel2}`;
-  document.getElementById('stat-tennis').textContent=`Tennis: ${counts.tennis1+counts.tennis2}`;
-  document.getElementById('stat-calcio').textContent=`Calcio: ${counts.calcio}`;
+  CAMPI.forEach(campo => { const el=document.getElementById('cnt-'+campo); if(el) el.textContent=c[campo]||'0'; });
+  document.getElementById('stat-padel').textContent  = `Padel: ${c.padel1+c.padel2}`;
+  document.getElementById('stat-tennis').textContent = `Tennis: ${c.tennis1+c.tennis2}`;
+  document.getElementById('stat-calcio').textContent = `Calcio: ${c.calcio}`;
 }
 
-// ─ TOAST ─────────────────────────────────────────────────────────────────────
-function showToast(msg,type='info'){
-  const t=document.getElementById('toast');
+// ── TOAST ────────────────────────────────────────────────────────────────
+function showToast(msg, type='info') {
+  const t = document.getElementById('toast');
   t.textContent=msg; t.className=`toast ${type} show`;
   clearTimeout(t._tid); t._tid=setTimeout(()=>t.classList.remove('show'),3500);
 }
 
-// ─ AUTO-SAVE ─────────────────────────────────────────────────────────────────
-setInterval(()=>{
-  const key=currentWeekKey(); if(!key) return;
-  if([...document.querySelectorAll('.fi-nome')].some(i=>i.value.trim())) saveAll();
-},60000);
-
-// ─ DATE-FROM INPUT ──────────────────────────────────────────────────────────
+// ── DATE-FROM INPUT con debounce ────────────────────────────────────────
 let _deb;
-document.getElementById('date-from').addEventListener('input',function(){
+document.getElementById('date-from').addEventListener('input', function() {
   clearTimeout(_deb);
-  _deb=setTimeout(()=>{
-    const val=this.value.trim();
-    if(val.length===10&&parseIT(val)) switchToWeek(val);
-    else updateHeaderDates();
-  },600);
-});
-document.getElementById('responsabile').addEventListener('input',()=>{
-  const fromStr=document.getElementById('date-from').value.trim();
-  const from=parseIT(fromStr);
-  if(from){
-    const sun=new Date(from); sun.setDate(from.getDate()+6);
-    document.getElementById('footer-info').textContent=
-      `Settimana ${fmtIT(from)} – ${fmtIT(sun)} · Responsabile: ${document.getElementById('responsabile').value||'—'}`;
-  }
+  _deb = setTimeout(() => {
+    const val = this.value.trim();
+    if (val.length===10 && parseIT(val)) {
+      switchToWeek(val);   // gestisce tutto: render + date + footer
+    } else {
+      // Data incompleta: aggiorna solo footer e date-to senza render
+      const from = parseIT(val);
+      syncWeekMeta(from||null);
+      refreshDateHeaders(from||null);
+    }
+  }, 600);
 });
 
-// ─ INIT ──────────────────────────────────────────────────────────────────────
+document.getElementById('responsabile').addEventListener('input', () => {
+  const from = parseIT(document.getElementById('date-from').value.trim());
+  syncWeekMeta(from||null);
+});
+
+// ── AUTO-SAVE ogni minuto ────────────────────────────────────────────────
+setInterval(() => {
+  const key = currentWeekKey(); if (!key) return;
+  if ([...document.querySelectorAll('.fi-nome')].some(i=>i.value.trim())) saveAll();
+}, 60000);
+
+// ── INIT ───────────────────────────────────────────────────────────────────
 buildViews();
 updateCounters();
 goToCurrentWeek();
