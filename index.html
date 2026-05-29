@@ -23,6 +23,7 @@ body{font-family:'Manrope',sans-serif;background:#ece7de;padding:20px;min-height
 .status.saving{background:#fff3cd;color:#856404}
 .status.saved{background:#d1e7dd;color:#0a3622}
 .status.error{background:#f8d7da;color:#842029}
+.status.loading{background:#e8edf5;color:#1a3a5c}
 .btn-row{display:flex;gap:7px;align-items:flex-end;flex-wrap:wrap}
 .btn{padding:9px 16px;border:none;border-radius:7px;font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap;letter-spacing:.03em}
 .btn-primary{background:#1a3a5c;color:#fff}.btn-primary:hover{background:#142d47}
@@ -71,8 +72,7 @@ tbody td.td-booked.sport-calcio{background:rgba(200,75,0,.07)!important;border-l
 .btn-del-slot:hover{color:#dc3545}
 .cell{padding:6px 8px;height:100%;display:flex;flex-direction:column;gap:4px;position:relative}
 .cell-booked-tag{display:none;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:#1a3a5c;border-radius:3px;padding:1px 6px;align-self:flex-start;margin-bottom:1px}
-.sport-tennis .cell-booked-tag{background:#2d7d32}
-.sport-calcio .cell-booked-tag{background:#c84b00}
+.sport-tennis .cell-booked-tag{background:#2d7d32}.sport-calcio .cell-booked-tag{background:#c84b00}
 td.td-booked .cell-booked-tag{display:inline-block}
 .cell-row{display:grid;grid-template-columns:1fr 1fr;gap:5px}
 .field{display:flex;flex-direction:column;gap:1px}
@@ -85,6 +85,7 @@ td.td-booked .cell-booked-tag{display:inline-block}
 .footer-stats{display:flex;gap:10px}
 .stat{font-size:11px;font-weight:700;padding:3px 11px;border-radius:12px}
 .stat.padel{background:#e8edf5;color:#1a3a5c}.stat.tennis{background:#e8f5e9;color:#2d7d32}.stat.calcio{background:#fff0e6;color:#c84b00}
+.sync-info{font-size:9px;color:#aaa;text-align:right;margin-top:4px;letter-spacing:.04em}
 .toast{position:fixed;bottom:22px;right:22px;padding:11px 18px;border-radius:8px;font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;z-index:9999;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none;max-width:320px}
 .toast.show{opacity:1;transform:translateY(0)}
 .toast.success{background:#d1e7dd;color:#0a3622;border:1px solid #a3cfbb}
@@ -92,7 +93,7 @@ td.td-booked .cell-booked-tag{display:inline-block}
 .toast.error{background:#f8d7da;color:#842029;border:1px solid #f1aeb5}
 @media print{
   body{background:#fff;padding:0}
-  .header .btn-row,.tabs,.footer,.add-slot-bar,.btn-del-slot{display:none}
+  .header .btn-row,.tabs,.footer,.add-slot-bar,.btn-del-slot,.sync-info{display:none}
   .campo-view{display:block!important}
   .page{box-shadow:none;padding:8px;border-radius:0}
   tbody td{height:80px}
@@ -130,7 +131,10 @@ td.td-booked .cell-booked-tag{display:inline-block}
 </div>
 <div id="views-container"></div>
 <div class="footer">
-  <span id="footer-info">Nessuna settimana selezionata</span>
+  <div>
+    <span id="footer-info">Nessuna settimana selezionata</span>
+    <div class="sync-info" id="sync-info"></div>
+  </div>
   <div class="footer-stats">
     <span class="stat padel" id="stat-padel">Padel: 0</span>
     <span class="stat tennis" id="stat-tennis">Tennis: 0</span>
@@ -141,100 +145,120 @@ td.td-booked .cell-booked-tag{display:inline-block}
 <div class="toast" id="toast"></div>
 
 <script>
+// ── SUPABASE CONFIG ─────────────────────────────────────────────
+const SB_URL = 'https://xjucqvcbhknfdyjtdwbr.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqdWNxdmNiaGtuZmR5anRkd2JyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMzg4OTgsImV4cCI6MjA5NTYxNDg5OH0.uitw5FUJx1XmDsBpjdS6u2DV2qUpqMPbzktlkW4BGpY';
+const TABLE  = 'prenotazioni_settimane';
+
+async function sbFetch(path, opts={}) {
+  const res = await fetch(SB_URL + '/rest/v1/' + path, {
+    ...opts,
+    headers: {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + SB_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': opts.prefer || '',
+      ...(opts.headers||{})
+    }
+  });
+  if (!res.ok) { const err=await res.text(); throw new Error(err); }
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
+}
+
+async function dbLoad(key) {
+  const rows = await sbFetch(`${TABLE}?id=eq.${encodeURIComponent(key)}&select=*`);
+  return rows && rows.length ? rows[0] : null;
+}
+
+async function dbSave(payload) {
+  await sbFetch(TABLE, {
+    method: 'POST',
+    prefer: 'resolution=merge-duplicates',
+    headers: { 'Prefer': 'resolution=merge-duplicates' },
+    body: JSON.stringify(payload)
+  });
+}
+
+// ── COSTANTI ──────────────────────────────────────────────────────────
 const CAMPI   = ['padel1','padel2','tennis1','tennis2','calcio'];
 const SPORT   = {padel1:'padel',padel2:'padel',tennis1:'tennis',tennis2:'tennis',calcio:'calcio'};
 const DAYS    = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'];
 const WEEKEND = [5,6];
 const FIELDS  = ['nome','tel','istr','importo'];
-const F_LABEL = {nome:'Nome',tel:'Telefono',istr:'Istruttore',importo:'Importo'};
 const DEFAULT_SLOTS = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00'];
 
 let campoSlots = {};
 CAMPI.forEach(c => { campoSlots[c] = [...DEFAULT_SLOTS]; });
 
-// ── DATE UTILS ──────────────────────────────────────────────────
+// ── DATE UTILS ─────────────────────────────────────────────────────────
 function parseIT(str) {
   if (!str) return null;
   const p = str.trim().split('/');
-  if (p.length !== 3) return null;
+  if (p.length!==3) return null;
   const dt = new Date(+p[2], +p[1]-1, +p[0]);
   return isNaN(dt) ? null : dt;
 }
 function fmtIT(dt) {
-  return String(dt.getDate()).padStart(2,'0') + '/' +
-         String(dt.getMonth()+1).padStart(2,'0') + '/' + dt.getFullYear();
+  return String(dt.getDate()).padStart(2,'0')+'/'+String(dt.getMonth()+1).padStart(2,'0')+'/'+dt.getFullYear();
 }
 function fmtShort(dt) {
-  return String(dt.getDate()).padStart(2,'0') + '/' + String(dt.getMonth()+1).padStart(2,'0');
+  return String(dt.getDate()).padStart(2,'0')+'/'+String(dt.getMonth()+1).padStart(2,'0');
 }
 function getMondayOf(d) {
-  const dt = new Date(d); dt.setHours(0,0,0,0);
-  const day = dt.getDay();
-  dt.setDate(dt.getDate() + (day===0 ? -6 : 1-day));
+  const dt=new Date(d); dt.setHours(0,0,0,0);
+  const day=dt.getDay();
+  dt.setDate(dt.getDate()+(day===0?-6:1-day));
   return dt;
 }
 function todayMidnight() { const d=new Date(); d.setHours(0,0,0,0); return d; }
 
-// ── TIME UTILS ──────────────────────────────────────────────────
+// ── TIME UTILS ─────────────────────────────────────────────────────────
 function normalizeTime(str) {
-  str = str.trim().replace(/[.,]/g,':');
-  let h, m = '00';
-  if (str.includes(':')) { [h,m] = str.split(':'); }
-  else if (str.length <= 2) { h = str; }
-  else { h = str.slice(0,-2); m = str.slice(-2); }
-  h = parseInt(h); m = parseInt(m);
-  if (isNaN(h)||isNaN(m)||h<0||h>23||m<0||m>59) return null;
+  str=str.trim().replace(/[.,]/g,':');
+  let h,m='00';
+  if(str.includes(':')){[h,m]=str.split(':');}
+  else if(str.length<=2){h=str;}
+  else{h=str.slice(0,-2);m=str.slice(-2);}
+  h=parseInt(h);m=parseInt(m);
+  if(isNaN(h)||isNaN(m)||h<0||h>23||m<0||m>59)return null;
   return h.toString().padStart(2,'0')+':'+m.toString().padStart(2,'0');
 }
-function nextHour(t) {
-  const [h,m] = t.split(':').map(Number);
-  return ((h+1)%24).toString().padStart(2,'0')+':'+m.toString().padStart(2,'0');
+function nextHour(t){
+  const[h,m]=t.split(':').map(Number);
+  return((h+1)%24).toString().padStart(2,'0')+':'+m.toString().padStart(2,'0');
 }
-function slotKey(t) { return t.replace(':',''); }
+function slotKey(t){return t.replace(':','');}
 
-// ── STORAGE KEYS ────────────────────────────────────────────────
-function weekKey(s) { return s ? 'rc_' + s.replace(/\//g,'_') : null; }
-function currentWeekKey() { return weekKey(document.getElementById('date-from').value.trim()); }
+// ── STORAGE KEY ──────────────────────────────────────────────────────────
+function weekKey(s){return s?'rc_'+s.replace(/\//g,'_'):null;}
+function currentWeekKey(){return weekKey(document.getElementById('date-from').value.trim());}
 
-// ── UPDATE FOOTER + DATE-TO (NO render) ───────────────────────────────
+// ── META / FOOTER (no render) ──────────────────────────────────────────────
 function syncWeekMeta(from) {
-  // Aggiorna solo date-to e footer, senza toccare il DOM delle tabelle
-  if (!from) {
-    document.getElementById('date-to').value = '';
-    document.getElementById('footer-info').textContent = 'Nessuna settimana selezionata';
-    return;
-  }
-  const sun = new Date(from); sun.setDate(from.getDate()+6);
-  document.getElementById('date-to').value = fmtIT(sun);
-  document.getElementById('footer-info').textContent =
-    `Settimana ${fmtIT(from)} – ${fmtIT(sun)} · Responsabile: ${document.getElementById('responsabile').value||'—'}`;
+  if(!from){document.getElementById('date-to').value='';document.getElementById('footer-info').textContent='Nessuna settimana selezionata';return;}
+  const sun=new Date(from);sun.setDate(from.getDate()+6);
+  document.getElementById('date-to').value=fmtIT(sun);
+  document.getElementById('footer-info').textContent=`Settimana ${fmtIT(from)} – ${fmtIT(sun)} · Responsabile: ${document.getElementById('responsabile').value||'—'}`;
 }
-
-// ── UPDATE SOLO LE DATE NEGLI HEADER DELLE TABELLE (NO rebuild HTML) ─────────
 function refreshDateHeaders(from) {
-  const today = todayMidnight();
-  // Ogni campo ha i propri span .day-date con data-campo e data-day-idx
-  CAMPI.forEach(campo => {
-    const view = document.getElementById('view-'+campo);
-    if (!view) return;
-    view.querySelectorAll('.day-date[data-day-idx]').forEach(el => {
-      const i = parseInt(el.dataset.dayIdx);
-      if (!from) { el.textContent = '—'; el.classList.remove('today'); return; }
-      const d = new Date(from); d.setDate(from.getDate()+i);
-      el.textContent = fmtShort(d);
-      el.classList.toggle('today', d.getTime()===today.getTime());
+  const today=todayMidnight();
+  CAMPI.forEach(campo=>{
+    const view=document.getElementById('view-'+campo);if(!view)return;
+    view.querySelectorAll('.day-date[data-day-idx]').forEach(el=>{
+      const i=parseInt(el.dataset.dayIdx);
+      if(!from){el.textContent='—';el.classList.remove('today');return;}
+      const d=new Date(from);d.setDate(from.getDate()+i);
+      el.textContent=fmtShort(d);
+      el.classList.toggle('today',d.getTime()===today.getTime());
     });
   });
 }
 
-// ── RENDER CAMPO (costruisce HTML, NON tocca date-to/footer) ─────────────
+// ── RENDER ─────────────────────────────────────────────────────────────────
 function renderCampo(campo) {
-  const sport = SPORT[campo];
-  const cc = sport==='padel' ? '' : 'c-'+sport;
-  const slots = campoSlots[campo];
-
-  // Add-slot bar
-  let html = `<div class="add-slot-bar">
+  const sport=SPORT[campo], cc=sport==='padel'?'':'c-'+sport, slots=campoSlots[campo];
+  let html=`<div class="add-slot-bar">
     <label>Aggiungi orario:</label>
     <input class="slot-time-input" id="nss-${campo}" placeholder="09:30" maxlength="5">
     <span style="color:#ccc">→</span>
@@ -242,314 +266,258 @@ function renderCampo(campo) {
     <button class="btn-add-slot" onclick="addSlot('${campo}')">+ Aggiungi slot</button>
     <span style="font-size:10px;color:#aaa;margin-left:6px">Es: 09:30 → 11:00 &nbsp;·&nbsp; 00:00–23:59</span>
   </div>`;
-
-  // Table header — le date vengono inserite vuote e populate da refreshDateHeaders()
-  html += `<table><thead><tr><th class="th-time">Orario</th>`;
-  DAYS.forEach((d,i) => {
-    const wk = WEEKEND.includes(i) ? ' th-weekend' : '';
-    html += `<th class="th-day${wk}"><div class="day-header">
-      <span class="day-name">${d}</span>
-      <span class="day-date" data-day-idx="${i}">—</span>
-    </div></th>`;
+  html+=`<table><thead><tr><th class="th-time">Orario</th>`;
+  DAYS.forEach((d,i)=>{
+    const wk=WEEKEND.includes(i)?' th-weekend':'';
+    html+=`<th class="th-day${wk}"><div class="day-header"><span class="day-name">${d}</span><span class="day-date" data-day-idx="${i}">—</span></div></th>`;
   });
-  html += `</tr></thead><tbody>`;
-
-  if (!slots.length) {
-    html += `<tr><td colspan="8" style="text-align:center;color:#aaa;font-size:12px;padding:24px">Nessun orario — usa la barra sopra per aggiungere slot.</td></tr>`;
-  } else {
-    slots.forEach(slot => {
-      html += `<tr><td class="td-time">
-        <span class="slot-label">${slot}</span>
-        <span class="slot-sub">↓ ${nextHour(slot)}</span>
-        <button class="btn-del-slot" onclick="removeSlot('${campo}','${slot}')" title="Rimuovi">✕</button>
-      </td>`;
-      DAYS.forEach((_,di) => {
-        const wkc = WEEKEND.includes(di) ? ' td-weekend' : '';
-        html += `<td class="${wkc}" id="td-${campo}-${slotKey(slot)}-${di}">
-          <div class="cell" data-campo="${campo}" data-slot="${slot}" data-day="${di}">
-            <span class="cell-booked-tag">Prenotato</span>
-            <div class="cell-row">
-              <div class="field"><span class="fl">Nome</span><input class="fi ${cc} fi-nome" type="text" placeholder="—" autocomplete="off"></div>
-              <div class="field"><span class="fl">Telefono</span><input class="fi ${cc} fi-tel" type="tel" placeholder="—" autocomplete="off"></div>
-            </div>
-            <div class="cell-row">
-              <div class="field"><span class="fl">Istruttore</span><input class="fi ${cc} fi-istr" type="text" placeholder="—" autocomplete="off"></div>
-              <div class="field"><span class="fl">Importo</span><input class="fi ${cc} fi-importo" type="text" placeholder="€" autocomplete="off"></div>
-            </div>
-          </div>
-        </td>`;
+  html+=`</tr></thead><tbody>`;
+  if(!slots.length){
+    html+=`<tr><td colspan="8" style="text-align:center;color:#aaa;font-size:12px;padding:24px">Nessun orario — usa la barra sopra per aggiungere slot.</td></tr>`;
+  }else{
+    slots.forEach(slot=>{
+      html+=`<tr><td class="td-time"><span class="slot-label">${slot}</span><span class="slot-sub">↓ ${nextHour(slot)}</span><button class="btn-del-slot" onclick="removeSlot('${campo}','${slot}')" title="Rimuovi">✕</button></td>`;
+      DAYS.forEach((_,di)=>{
+        const wkc=WEEKEND.includes(di)?' td-weekend':'';
+        html+=`<td class="${wkc}" id="td-${campo}-${slotKey(slot)}-${di}"><div class="cell" data-campo="${campo}" data-slot="${slot}" data-day="${di}"><span class="cell-booked-tag">Prenotato</span><div class="cell-row"><div class="field"><span class="fl">Nome</span><input class="fi ${cc} fi-nome" type="text" placeholder="—" autocomplete="off"></div><div class="field"><span class="fl">Telefono</span><input class="fi ${cc} fi-tel" type="tel" placeholder="—" autocomplete="off"></div></div><div class="cell-row"><div class="field"><span class="fl">Istruttore</span><input class="fi ${cc} fi-istr" type="text" placeholder="—" autocomplete="off"></div><div class="field"><span class="fl">Importo</span><input class="fi ${cc} fi-importo" type="text" placeholder="€" autocomplete="off"></div></div></div></td>`;
       });
-      html += `</tr>`;
+      html+=`</tr>`;
     });
   }
-  html += `</tbody></table>`;
-
-  const view = document.getElementById('view-'+campo);
-  view.innerHTML = html;
-
-  view.querySelectorAll('.fi').forEach(inp => {
-    inp.addEventListener('input', () => { refreshCellState(inp.closest('.cell')); updateCounters(); });
+  html+=`</tbody></table>`;
+  const view=document.getElementById('view-'+campo);
+  view.innerHTML=html;
+  view.querySelectorAll('.fi').forEach(inp=>{
+    inp.addEventListener('input',()=>{refreshCellState(inp.closest('.cell'));updateCounters();});
   });
-  const si = document.getElementById('nss-'+campo);
-  const ei = document.getElementById('nse-'+campo);
-  if (si) si.addEventListener('keydown', e => { if(e.key==='Enter') ei && ei.focus(); });
-  if (ei) ei.addEventListener('keydown', e => { if(e.key==='Enter') addSlot(campo); });
+  const si=document.getElementById('nss-'+campo),ei=document.getElementById('nse-'+campo);
+  if(si)si.addEventListener('keydown',e=>{if(e.key==='Enter')ei&&ei.focus();});
+  if(ei)ei.addEventListener('keydown',e=>{if(e.key==='Enter')addSlot(campo);});
 }
+function renderAllCampi(){CAMPI.forEach(renderCampo);}
 
-function renderAllCampi() { CAMPI.forEach(renderCampo); }
-
-// ── INIT VIEWS ─────────────────────────────────────────────────────
-function buildViews() {
-  const c = document.getElementById('views-container');
-  CAMPI.forEach((campo,ci) => {
-    const div = document.createElement('div');
-    div.className = 'campo-view'+(ci===0?' active':'');
-    div.id = 'view-'+campo;
+function buildViews(){
+  const c=document.getElementById('views-container');
+  CAMPI.forEach((campo,ci)=>{
+    const div=document.createElement('div');
+    div.className='campo-view'+(ci===0?' active':'');
+    div.id='view-'+campo;
     c.appendChild(div);
   });
   renderAllCampi();
 }
 
-// ── ADD / REMOVE SLOT ────────────────────────────────────────────────
-function addSlot(campo) {
-  const si = document.getElementById('nss-'+campo);
-  const ei = document.getElementById('nse-'+campo);
-  const start = normalizeTime(si.value);
-  if (!start) { showToast('⚠️ Orario non valido (es: 09:30)','error'); si.focus(); return; }
-  if (campoSlots[campo].includes(start)) { showToast('ℹ️ Orario '+start+' già presente','info'); return; }
-
-  const endRaw = ei.value.trim();
-  const end = endRaw ? normalizeTime(endRaw) : nextHour(start);
-  if (!end) { showToast('⚠️ Orario di fine non valido','error'); ei.focus(); return; }
-
-  const existing = collectCampoData(campo);
-  const from = parseIT(document.getElementById('date-from').value.trim());
-
-  campoSlots[campo].push(start);
-  campoSlots[campo].sort();
-  renderCampo(campo);
-  restoreCampoData(campo, existing);
-  refreshDateHeaders(from);   // ← aggiorna le date senza loop
-  updateCounters();
-
-  si.value = ''; ei.value = ''; si.focus();
+// ── ADD / REMOVE SLOT ──────────────────────────────────────────────────
+function addSlot(campo){
+  const si=document.getElementById('nss-'+campo),ei=document.getElementById('nse-'+campo);
+  const start=normalizeTime(si.value);
+  if(!start){showToast('⚠️ Orario non valido (es: 09:30)','error');si.focus();return;}
+  if(campoSlots[campo].includes(start)){showToast('ℹ️ Orario '+start+' già presente','info');return;}
+  const end=ei.value.trim()?normalizeTime(ei.value):nextHour(start);
+  if(!end){showToast('⚠️ Orario di fine non valido','error');ei.focus();return;}
+  const existing=collectCampoData(campo);
+  const from=parseIT(document.getElementById('date-from').value.trim());
+  campoSlots[campo].push(start);campoSlots[campo].sort();
+  renderCampo(campo);restoreCampoData(campo,existing);refreshDateHeaders(from);updateCounters();
+  si.value='';ei.value='';si.focus();
   showToast('✅ Slot '+start+' → '+end+' aggiunto','success');
 }
-
-function removeSlot(campo, slot) {
-  if (!confirm(`Rimuovere lo slot ${slot}?\nI dati in questo orario andranno persi.`)) return;
-  const existing = collectCampoData(campo);
-  const from = parseIT(document.getElementById('date-from').value.trim());
-  campoSlots[campo] = campoSlots[campo].filter(s=>s!==slot);
+function removeSlot(campo,slot){
+  if(!confirm(`Rimuovere lo slot ${slot}?\nI dati in questo orario andranno persi.`))return;
+  const existing=collectCampoData(campo);
+  const from=parseIT(document.getElementById('date-from').value.trim());
+  campoSlots[campo]=campoSlots[campo].filter(s=>s!==slot);
   renderCampo(campo);
-  const filtered = Object.fromEntries(Object.entries(existing).filter(([k])=>!k.startsWith(`${campo}||${slot}||`)));
-  restoreCampoData(campo, filtered);
-  refreshDateHeaders(from);   // ← aggiorna le date senza loop
-  updateCounters();
+  const filtered=Object.fromEntries(Object.entries(existing).filter(([k])=>!k.startsWith(`${campo}||${slot}||`)));
+  restoreCampoData(campo,filtered);refreshDateHeaders(from);updateCounters();
   showToast('🗑 Slot '+slot+' rimosso','info');
 }
 
 // ── COLLECT / RESTORE ──────────────────────────────────────────────────
-function collectCampoData(campo) {
-  const data = {};
-  document.querySelectorAll(`.cell[data-campo="${campo}"]`).forEach(cell => {
-    const k = `${cell.dataset.campo}||${cell.dataset.slot}||${cell.dataset.day}`;
-    const entry = {};
-    FIELDS.forEach(f => { entry[f] = cell.querySelector('.fi-'+f)?.value||''; });
-    if (FIELDS.some(f=>entry[f])) data[k] = entry;
+function collectCampoData(campo){
+  const data={};
+  document.querySelectorAll(`.cell[data-campo="${campo}"]`).forEach(cell=>{
+    const k=`${cell.dataset.campo}||${cell.dataset.slot}||${cell.dataset.day}`;
+    const entry={};
+    FIELDS.forEach(f=>{entry[f]=cell.querySelector('.fi-'+f)?.value||'';});
+    if(FIELDS.some(f=>entry[f]))data[k]=entry;
   });
   return data;
 }
-function restoreCampoData(campo, data) {
-  Object.entries(data).forEach(([k,v]) => {
-    const [c,slot,day] = k.split('||');
-    if (c!==campo) return;
-    const cell = document.querySelector(`.cell[data-campo="${c}"][data-slot="${slot}"][data-day="${day}"]`);
-    if (!cell) return;
-    FIELDS.forEach(f => { const inp=cell.querySelector('.fi-'+f); if(inp) inp.value=v[f]||''; });
+function restoreCampoData(campo,data){
+  Object.entries(data).forEach(([k,v])=>{
+    const[c,slot,day]=k.split('||');if(c!==campo)return;
+    const cell=document.querySelector(`.cell[data-campo="${c}"][data-slot="${slot}"][data-day="${day}"]`);
+    if(!cell)return;
+    FIELDS.forEach(f=>{const inp=cell.querySelector('.fi-'+f);if(inp)inp.value=v[f]||'';});
+    refreshCellState(cell);
+  });
+}
+function restoreAllData(slots){
+  if(!slots)return;
+  Object.entries(slots).forEach(([k,v])=>{
+    const[campo,slot,day]=k.split('||');
+    const cell=document.querySelector(`.cell[data-campo="${campo}"][data-slot="${slot}"][data-day="${day}"]`);
+    if(!cell)return;
+    FIELDS.forEach(f=>{const inp=cell.querySelector('.fi-'+f);if(inp)inp.value=v[f]||'';});
     refreshCellState(cell);
   });
 }
 
 // ── CELL STATE ─────────────────────────────────────────────────────────
-function refreshCellState(cell) {
-  if (!cell) return;
-  const td = cell.closest('td'); if (!td) return;
-  const sport = SPORT[cell.dataset.campo];
-  const nome = cell.querySelector('.fi-nome')?.value?.trim();
+function refreshCellState(cell){
+  if(!cell)return;
+  const td=cell.closest('td');if(!td)return;
+  const sport=SPORT[cell.dataset.campo];
+  const nome=cell.querySelector('.fi-nome')?.value?.trim();
   td.classList.remove('td-booked','sport-tennis','sport-calcio');
-  if (nome) { td.classList.add('td-booked'); if(sport!=='padel') td.classList.add('sport-'+sport); }
+  if(nome){td.classList.add('td-booked');if(sport!=='padel')td.classList.add('sport-'+sport);}
 }
 
 // ── TAB SWITCH ──────────────────────────────────────────────────────────
-function showCampo(campo) {
+function showCampo(campo){
   document.querySelectorAll('.campo-view').forEach(v=>v.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('view-'+campo).classList.add('active');
   document.getElementById('tab-'+campo).classList.add('active');
 }
 
-// ── SAVE ─────────────────────────────────────────────────────────────────
-function saveAll() {
-  const key = currentWeekKey();
-  if (!key) { showToast('⚠️ Inserisci prima la data di inizio settimana','error'); return; }
-  const btn=document.getElementById('btn-save'), bar=document.getElementById('status-bar');
-  btn.disabled=true; bar.className='status saving'; bar.textContent='Salvataggio...';
-  try {
-    const payload = {
-      meta: {
-        dateFrom: document.getElementById('date-from').value.trim(),
-        dateTo:   document.getElementById('date-to').value,
-        responsabile: document.getElementById('responsabile').value,
-        savedAt: new Date().toISOString()
-      },
-      campoSlots: JSON.parse(JSON.stringify(campoSlots)),
+// ── SAVE su SUPABASE ──────────────────────────────────────────────────
+async function saveAll(){
+  const key=currentWeekKey();
+  if(!key){showToast('⚠️ Inserisci prima la data di inizio settimana','error');return;}
+  const btn=document.getElementById('btn-save'),bar=document.getElementById('status-bar');
+  btn.disabled=true;bar.className='status saving';bar.textContent='Salvataggio...';
+  try{
+    const payload={
+      id: key,
+      date_from: document.getElementById('date-from').value.trim(),
+      date_to:   document.getElementById('date-to').value,
+      responsabile: document.getElementById('responsabile').value,
+      campo_slots: campoSlots,
       slots: {}
     };
-    document.querySelectorAll('.cell').forEach(cell => {
-      const k = `${cell.dataset.campo}||${cell.dataset.slot}||${cell.dataset.day}`;
-      const entry = {};
-      FIELDS.forEach(f => { entry[f] = cell.querySelector('.fi-'+f)?.value||''; });
-      if (FIELDS.some(f=>entry[f])) payload.slots[k] = entry;
+    document.querySelectorAll('.cell').forEach(cell=>{
+      const k=`${cell.dataset.campo}||${cell.dataset.slot}||${cell.dataset.day}`;
+      const entry={};
+      FIELDS.forEach(f=>{entry[f]=cell.querySelector('.fi-'+f)?.value||'';});
+      if(FIELDS.some(f=>entry[f]))payload.slots[k]=entry;
     });
-    localStorage.setItem(key, JSON.stringify(payload));
-    let idx = JSON.parse(localStorage.getItem('rc_index')||'[]');
-    idx = [key, ...idx.filter(k2=>k2!==key)];
-    if (idx.length>104) idx.pop();
-    localStorage.setItem('rc_index', JSON.stringify(idx));
-    bar.className='status saved'; bar.textContent='✓ Salvato';
-    showToast('✅ Settimana salvata!','success');
-    setTimeout(()=>{ bar.className='status idle'; bar.textContent='Pronto'; },3000);
-  } catch(e) {
-    bar.className='status error'; bar.textContent='Errore!';
-    showToast('❌ Errore: '+e.message,'error');
-  } finally { btn.disabled=false; }
+    await dbSave(payload);
+    bar.className='status saved';bar.textContent='✓ Salvato';
+    const now=new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+    document.getElementById('sync-info').textContent='☁️ Sincronizzato alle '+now;
+    showToast('✅ Salvato e sincronizzato!','success');
+    setTimeout(()=>{bar.className='status idle';bar.textContent='Pronto';},3000);
+  }catch(e){
+    bar.className='status error';bar.textContent='Errore!';
+    showToast('❌ Errore salvataggio: '+e.message,'error');
+  }finally{btn.disabled=false;}
 }
 
-// ── LOAD WEEK DATA ────────────────────────────────────────────────────
-function loadWeekData(key) {
-  if (!key) return false;
-  const raw = localStorage.getItem(key);
-  if (!raw) return false;
-  try {
-    const data = JSON.parse(raw);
-    // 1. Ripristina meta
-    if (data.meta) {
-      document.getElementById('date-from').value      = data.meta.dateFrom||'';
-      document.getElementById('responsabile').value   = data.meta.responsabile||'';
-    }
-    // 2. Ripristina slot personalizzati
-    if (data.campoSlots) {
-      CAMPI.forEach(c => { if(data.campoSlots[c]) campoSlots[c]=[...data.campoSlots[c]]; });
-    }
-    // 3. Ricostruisce HTML tabelle
+// ── LOAD da SUPABASE ──────────────────────────────────────────────────
+async function loadWeekData(key){
+  if(!key)return false;
+  try{
+    const data=await dbLoad(key);
+    if(!data)return false;
+    if(data.date_from)document.getElementById('date-from').value=data.date_from;
+    if(data.responsabile)document.getElementById('responsabile').value=data.responsabile;
+    if(data.campo_slots)CAMPI.forEach(c=>{if(data.campo_slots[c])campoSlots[c]=[...data.campo_slots[c]];});
     renderAllCampi();
-    // 4. Aggiorna date negli header (una sola volta, senza loop)
-    const from = parseIT(document.getElementById('date-from').value.trim());
+    const from=parseIT(document.getElementById('date-from').value.trim());
     refreshDateHeaders(from);
     syncWeekMeta(from);
-    // 5. Popola i dati nelle celle
-    if (data.slots) {
-      Object.entries(data.slots).forEach(([k,v]) => {
-        const [campo,slot,day] = k.split('||');
-        const cell = document.querySelector(`.cell[data-campo="${campo}"][data-slot="${slot}"][data-day="${day}"]`);
-        if (!cell) return;
-        FIELDS.forEach(f => { const inp=cell.querySelector('.fi-'+f); if(inp) inp.value=v[f]||''; });
-        refreshCellState(cell);
-      });
-    }
+    restoreAllData(data.slots);
     updateCounters();
+    const upd=data.updated_at?new Date(data.updated_at).toLocaleString('it-IT'):'';
+    document.getElementById('sync-info').textContent=upd?'☁️ Ultimo salvataggio: '+upd:'';
     return true;
-  } catch(e) { console.error(e); return false; }
+  }catch(e){console.error(e);showToast('❌ Errore caricamento: '+e.message,'error');return false;}
 }
 
 // ── CLEAR ────────────────────────────────────────────────────────────────
-function clearInputs() {
+function clearInputs(){
   document.querySelectorAll('.fi').forEach(i=>i.value='');
   document.querySelectorAll('td.td-booked').forEach(td=>td.classList.remove('td-booked','sport-tennis','sport-calcio'));
   updateCounters();
 }
-function clearAllConfirm() {
-  if (!confirm('Svuotare tutti i dati della settimana?\n(Gli orari personalizzati vengono mantenuti.)')) return;
-  clearInputs(); showToast('🗑 Foglio svuotato','info');
+function clearAllConfirm(){
+  if(!confirm('Svuotare tutti i dati della settimana?\n(Gli orari personalizzati vengono mantenuti.)'))return;
+  clearInputs();showToast('🗑 Foglio svuotato','info');
 }
 
 // ── SWITCH SETTIMANA ────────────────────────────────────────────────────
-function switchToWeek(fromStr) {
-  // Reset slot ai default
-  CAMPI.forEach(c => { campoSlots[c] = [...DEFAULT_SLOTS]; });
-  // Imposta la data nel campo
-  document.getElementById('date-from').value = fromStr;
-  const from = parseIT(fromStr);
-  // Prova a caricare settimana salvata
-  const key = weekKey(fromStr);
-  const found = loadWeekData(key);
-  if (!found) {
-    // Settimana nuova: render pulito + aggiorna date
+async function switchToWeek(fromStr){
+  CAMPI.forEach(c=>{campoSlots[c]=[...DEFAULT_SLOTS];});
+  clearInputs();
+  document.getElementById('date-from').value=fromStr;
+  document.getElementById('sync-info').textContent='';
+  const bar=document.getElementById('status-bar');
+  bar.className='status loading';bar.textContent='⏳ Caricamento...';
+  const key=weekKey(fromStr);
+  const found=await loadWeekData(key);
+  if(!found){
     renderAllCampi();
+    const from=parseIT(fromStr);
     refreshDateHeaders(from);
     syncWeekMeta(from);
     updateCounters();
+    bar.className='status idle';bar.textContent='Pronto';
+  }else{
+    bar.className='status idle';bar.textContent='Pronto';
   }
-  showToast(found ? '📂 Dati caricati: '+fromStr : '📋 Nuova settimana: '+fromStr, found?'success':'info');
+  showToast(found?'📂 Dati caricati: '+fromStr:'📋 Nuova settimana: '+fromStr,found?'success':'info');
 }
 
-function goToCurrentWeek() { switchToWeek(fmtIT(getMondayOf(new Date()))); }
-
-function navWeek(dir) {
-  const fromStr = document.getElementById('date-from').value.trim();
-  const from = parseIT(fromStr);
-  if (!from) { showToast('⚠️ Inserisci prima una data valida','error'); return; }
-  const next = new Date(from); next.setDate(from.getDate() + dir*7);
+function goToCurrentWeek(){switchToWeek(fmtIT(getMondayOf(new Date())));}
+function navWeek(dir){
+  const fromStr=document.getElementById('date-from').value.trim();
+  const from=parseIT(fromStr);
+  if(!from){showToast('⚠️ Inserisci prima una data valida','error');return;}
+  const next=new Date(from);next.setDate(from.getDate()+dir*7);
   switchToWeek(fmtIT(next));
 }
 
 // ── COUNTERS ─────────────────────────────────────────────────────────────
-function updateCounters() {
-  const c = {padel1:0,padel2:0,tennis1:0,tennis2:0,calcio:0};
-  document.querySelectorAll('.cell').forEach(cell => {
-    if (cell.querySelector('.fi-nome')?.value?.trim()) c[cell.dataset.campo]++;
+function updateCounters(){
+  const c={padel1:0,padel2:0,tennis1:0,tennis2:0,calcio:0};
+  document.querySelectorAll('.cell').forEach(cell=>{
+    if(cell.querySelector('.fi-nome')?.value?.trim())c[cell.dataset.campo]++;
   });
-  CAMPI.forEach(campo => { const el=document.getElementById('cnt-'+campo); if(el) el.textContent=c[campo]||'0'; });
-  document.getElementById('stat-padel').textContent  = `Padel: ${c.padel1+c.padel2}`;
-  document.getElementById('stat-tennis').textContent = `Tennis: ${c.tennis1+c.tennis2}`;
-  document.getElementById('stat-calcio').textContent = `Calcio: ${c.calcio}`;
+  CAMPI.forEach(campo=>{const el=document.getElementById('cnt-'+campo);if(el)el.textContent=c[campo]||'0';});
+  document.getElementById('stat-padel').textContent=`Padel: ${c.padel1+c.padel2}`;
+  document.getElementById('stat-tennis').textContent=`Tennis: ${c.tennis1+c.tennis2}`;
+  document.getElementById('stat-calcio').textContent=`Calcio: ${c.calcio}`;
 }
 
 // ── TOAST ────────────────────────────────────────────────────────────────
-function showToast(msg, type='info') {
-  const t = document.getElementById('toast');
-  t.textContent=msg; t.className=`toast ${type} show`;
-  clearTimeout(t._tid); t._tid=setTimeout(()=>t.classList.remove('show'),3500);
+function showToast(msg,type='info'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className=`toast ${type} show`;
+  clearTimeout(t._tid);t._tid=setTimeout(()=>t.classList.remove('show'),3500);
 }
 
-// ── DATE-FROM INPUT con debounce ────────────────────────────────────────
+// ── DATE-FROM INPUT ────────────────────────────────────────────────────────
 let _deb;
-document.getElementById('date-from').addEventListener('input', function() {
+document.getElementById('date-from').addEventListener('input',function(){
   clearTimeout(_deb);
-  _deb = setTimeout(() => {
-    const val = this.value.trim();
-    if (val.length===10 && parseIT(val)) {
-      switchToWeek(val);   // gestisce tutto: render + date + footer
-    } else {
-      // Data incompleta: aggiorna solo footer e date-to senza render
-      const from = parseIT(val);
-      syncWeekMeta(from||null);
-      refreshDateHeaders(from||null);
-    }
-  }, 600);
+  _deb=setTimeout(()=>{
+    const val=this.value.trim();
+    if(val.length===10&&parseIT(val)){switchToWeek(val);}
+    else{const from=parseIT(val);syncWeekMeta(from||null);refreshDateHeaders(from||null);}
+  },600);
 });
-
-document.getElementById('responsabile').addEventListener('input', () => {
-  const from = parseIT(document.getElementById('date-from').value.trim());
+document.getElementById('responsabile').addEventListener('input',()=>{
+  const from=parseIT(document.getElementById('date-from').value.trim());
   syncWeekMeta(from||null);
 });
 
-// ── AUTO-SAVE ogni minuto ────────────────────────────────────────────────
-setInterval(() => {
-  const key = currentWeekKey(); if (!key) return;
-  if ([...document.querySelectorAll('.fi-nome')].some(i=>i.value.trim())) saveAll();
-}, 60000);
+// ── AUTO-SAVE ogni 60s ─────────────────────────────────────────────────────
+setInterval(()=>{
+  const key=currentWeekKey();if(!key)return;
+  if([...document.querySelectorAll('.fi-nome')].some(i=>i.value.trim()))saveAll();
+},60000);
 
 // ── INIT ───────────────────────────────────────────────────────────────────
 buildViews();
