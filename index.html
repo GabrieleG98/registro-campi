@@ -3,468 +3,637 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#1a3a5c">
+<meta name="theme-color" content="#0f2540">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Campi">
 <title>Registro Campi</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* ── RESET & BASE ── */
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{height:100%}
-body{
-  font-family:'Manrope',sans-serif;
-  background:#ece7de;
-  min-height:100%;
-  min-height:100dvh;
-  overflow-x:hidden;
+/* ═══════════════════════════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════════════════════════ */
+:root{
+  --navy:   #0f2540;
+  --navy2:  #1a3a5c;
+  --gold:   #c9a84c;
+  --gold2:  #b5943d;
+  --green:  #1e6b2e;
+  --green2: #e6f4ea;
+  --orange: #b53a00;
+  --orange2:#fff0e6;
+  --bg:     #e8e2d8;
+  --surface:#faf8f4;
+  --surface2:#f2ede6;
+  --border: rgba(15,37,64,.09);
+  --shadow: 0 4px 24px rgba(0,0,0,.10);
+  --r:      12px;
+  --r-sm:   8px;
 }
 
-/* ── APP SHELL ── */
-.app{
-  display:flex;
-  flex-direction:column;
+/* ═══════════════════════════════════════════════════════════
+   RESET
+═══════════════════════════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;}
+body{
+  font-family:'Manrope',sans-serif;
+  background:var(--bg);
   min-height:100dvh;
-  max-width:1800px;
+  overflow-x:hidden;
+  color:var(--navy);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   APP SHELL
+═══════════════════════════════════════════════════════════ */
+.app{
+  display:flex;flex-direction:column;
+  min-height:100dvh;
+  max-width:1900px;
   margin:0 auto;
 }
 
-/* ── TOP HEADER ── */
+/* ═══════════════════════════════════════════════════════════
+   TOP BAR
+═══════════════════════════════════════════════════════════ */
 .topbar{
-  background:#1a3a5c;
+  background:var(--navy);
   color:#fff;
-  padding:12px 16px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  position:sticky;
-  top:0;
-  z-index:100;
-  box-shadow:0 2px 12px rgba(0,0,0,.2);
-  padding-top: max(12px, env(safe-area-inset-top));
+  padding:14px 20px;
+  padding-top:max(14px,env(safe-area-inset-top));
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 20px rgba(0,0,0,.25);
 }
-.topbar-brand{display:flex;flex-direction:column;min-width:0}
+.topbar-brand{display:flex;flex-direction:column;gap:2px;min-width:0}
 .topbar-title{
   font-family:'Cormorant Garamond',serif;
-  font-size:20px;font-weight:700;line-height:1;
+  font-size:22px;font-weight:700;line-height:1;
+  letter-spacing:-.01em;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .topbar-sub{
-  font-size:9px;letter-spacing:.14em;text-transform:uppercase;
-  color:rgba(255,255,255,.55);margin-top:2px;
+  font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,.45);
 }
-.topbar-actions{display:flex;gap:6px;align-items:center;flex-shrink:0}
-.icon-btn{
-  width:36px;height:36px;border:none;border-radius:8px;
-  background:rgba(255,255,255,.12);color:#fff;
-  font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;
-  transition:background .15s;
-}
-.icon-btn:hover{background:rgba(255,255,255,.22)}
-.icon-btn.accent{background:#c9a84c;}
-.icon-btn.accent:hover{background:#b5943d}
-.icon-btn.danger{background:rgba(220,53,69,.3)}
-.icon-btn.danger:hover{background:rgba(220,53,69,.6)}
-.status-pill{
-  font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;
-  white-space:nowrap;
-}
-.status-pill.idle{background:rgba(255,255,255,.12);color:rgba(255,255,255,.7)}
-.status-pill.saving{background:#fff3cd;color:#856404}
-.status-pill.saved{background:#d1e7dd;color:#0a3622}
-.status-pill.error{background:#f8d7da;color:#842029}
-.status-pill.loading{background:rgba(255,255,255,.18);color:#fff}
+.topbar-actions{display:flex;gap:7px;align-items:center;flex-shrink:0}
 
-/* ── WEEK BAR ── */
-.weekbar{
-  background:#fbf9f5;
-  border-bottom:1px solid rgba(26,58,92,.1);
-  padding:10px 16px;
-  display:flex;
-  align-items:center;
-  gap:8px;
-  flex-wrap:wrap;
+.status-pill{
+  font-size:10px;font-weight:700;padding:4px 11px;border-radius:20px;
+  white-space:nowrap;letter-spacing:.03em;
 }
-.week-nav-group{display:flex;align-items:center;gap:6px;flex:1;min-width:200px}
+.status-pill.idle{background:rgba(255,255,255,.1);color:rgba(255,255,255,.6)}
+.status-pill.saving{background:#fef3c7;color:#92400e}
+.status-pill.saved{background:#d1fae5;color:#065f46}
+.status-pill.error{background:#fee2e2;color:#991b1b}
+.status-pill.loading{background:rgba(255,255,255,.14);color:rgba(255,255,255,.8)}
+
+.icon-btn{
+  width:38px;height:38px;border:none;border-radius:var(--r-sm);
+  background:rgba(255,255,255,.1);color:#fff;
+  font-size:17px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s;
+}
+.icon-btn:hover{background:rgba(255,255,255,.2);transform:scale(1.05)}
+.icon-btn.gold{background:var(--gold);}
+.icon-btn.gold:hover{background:var(--gold2)}
+.icon-btn.red{background:rgba(239,68,68,.25)}
+.icon-btn.red:hover{background:rgba(239,68,68,.5)}
+
+/* ═══════════════════════════════════════════════════════════
+   WEEK BAR
+═══════════════════════════════════════════════════════════ */
+.weekbar{
+  background:var(--surface);
+  border-bottom:2px solid var(--border);
+  padding:11px 20px;
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.week-nav-group{
+  display:flex;align-items:center;gap:7px;
+  flex:1;min-width:180px;
+}
 .week-btn{
-  width:32px;height:32px;border:1.5px solid rgba(26,58,92,.25);
-  border-radius:7px;background:#fff;color:#1a3a5c;
-  font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  width:34px;height:34px;
+  border:1.5px solid rgba(15,37,64,.2);
+  border-radius:var(--r-sm);background:#fff;color:var(--navy);
+  font-size:15px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
   transition:all .15s;flex-shrink:0;
 }
-.week-btn:hover{background:#1a3a5c;color:#fff;border-color:#1a3a5c}
+.week-btn:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
 .week-btn.today-btn{
-  background:#c9a84c;color:#fff;border-color:#c9a84c;
-  font-size:10px;font-weight:700;width:auto;padding:0 10px;
-  letter-spacing:.04em;
+  background:var(--gold);color:#fff;border-color:var(--gold);
+  font-size:10px;font-weight:800;width:auto;padding:0 12px;
+  letter-spacing:.06em;
 }
-.week-btn.today-btn:hover{background:#b5943d;border-color:#b5943d}
+.week-btn.today-btn:hover{background:var(--gold2);border-color:var(--gold2)}
 .week-range{
-  font-size:12px;font-weight:700;color:#1a3a5c;
+  font-size:13px;font-weight:700;color:var(--navy);
   flex:1;text-align:center;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
-.week-inputs{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .ctrl-group{display:flex;flex-direction:column;gap:2px}
-.ctrl-label{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#8c8ca4;font-weight:700}
+.ctrl-label{font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:#9ca3af;font-weight:700}
 .ctrl-input{
-  border:none;border-bottom:1.5px solid rgba(26,58,92,.3);
+  border:none;border-bottom:2px solid rgba(15,37,64,.15);
   background:transparent;font-family:'Manrope',sans-serif;
-  font-size:13px;color:#1a3a5c;outline:none;
-  width:100px;padding:1px 0;
+  font-size:13px;font-weight:600;color:var(--navy);outline:none;
+  width:105px;padding:2px 0;
+  transition:border-color .15s;
 }
-.ctrl-input:focus{border-bottom-color:#1a3a5c;border-bottom-width:2px}
-.ctrl-input[readonly]{color:#8c8ca4;border-bottom-style:dashed}
-.sync-badge{
-  font-size:9px;color:#8c8ca4;letter-spacing:.03em;
-  white-space:nowrap;
-}
+.ctrl-input:focus{border-bottom-color:var(--navy)}
+.ctrl-input[readonly]{color:#9ca3af;border-bottom-style:dashed}
+.sync-badge{font-size:9px;color:#9ca3af;white-space:nowrap}
 
-/* ── TABS ── */
+/* ═══════════════════════════════════════════════════════════
+   TABS
+═══════════════════════════════════════════════════════════ */
 .tabs-wrap{
-  background:#fbf9f5;
-  padding:8px 16px 0;
-  border-bottom:2px solid rgba(26,58,92,.08);
-  overflow-x:auto;
-  scrollbar-width:none;
+  background:var(--surface);
+  padding:0 20px;
+  border-bottom:2px solid var(--border);
+  overflow-x:auto;scrollbar-width:none;
 }
 .tabs-wrap::-webkit-scrollbar{display:none}
-.tabs{
-  display:flex;gap:4px;
-  min-width:max-content;
-}
-.tab-btn{
-  padding:8px 14px;
-  border:none;border-bottom:3px solid transparent;
-  border-radius:0;
-  background:transparent;
-  font-family:'Manrope',sans-serif;font-size:11px;font-weight:700;
-  letter-spacing:.06em;text-transform:uppercase;
-  cursor:pointer;color:#8c8ca4;
-  display:flex;align-items:center;gap:5px;
-  transition:all .15s;white-space:nowrap;
-  margin-bottom:-2px;
-}
-.tab-btn:hover{color:#1a3a5c}
-.tab-btn.padel.active{color:#1a3a5c;border-bottom-color:#1a3a5c}
-.tab-btn.tennis.active{color:#2d7d32;border-bottom-color:#2d7d32}
-.tab-btn.calcio.active{color:#c84b00;border-bottom-color:#c84b00}
-.badge{
-  font-size:9px;font-weight:700;padding:1px 6px;
-  border-radius:10px;background:rgba(0,0,0,.07);color:inherit;
-}
+.tabs{display:flex;gap:2px;min-width:max-content}
 
-/* ── MAIN CONTENT ── */
-.main{
-  flex:1;
-  padding:16px;
-  overflow:hidden;
+.tab-btn{
+  padding:12px 18px;
+  border:none;border-bottom:3px solid transparent;
+  background:transparent;
+  font-family:'Manrope',sans-serif;font-size:11.5px;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;
+  cursor:pointer;color:#94a3b8;
+  display:flex;align-items:center;gap:6px;
+  transition:all .2s;white-space:nowrap;
+  margin-bottom:-2px;
+  border-radius:0;
 }
+.tab-btn:hover{color:var(--navy);background:rgba(15,37,64,.03)}
+.tab-btn.padel.active{color:var(--navy2);border-bottom-color:var(--navy2);background:rgba(26,58,92,.04)}
+.tab-btn.tennis.active{color:var(--green);border-bottom-color:var(--green);background:rgba(30,107,46,.04)}
+.tab-btn.calcio.active{color:var(--orange);border-bottom-color:var(--orange);background:rgba(181,58,0,.04)}
+
+.badge{
+  font-size:10px;font-weight:800;padding:2px 7px;
+  border-radius:12px;min-width:22px;text-align:center;
+}
+.padel .badge{background:rgba(26,58,92,.1);color:var(--navy2)}
+.tennis .badge{background:rgba(30,107,46,.1);color:var(--green)}
+.calcio .badge{background:rgba(181,58,0,.1);color:var(--orange)}
+.tab-btn:not(.active) .badge{background:rgba(0,0,0,.06);color:#94a3b8}
+
+/* ═══════════════════════════════════════════════════════════
+   MAIN
+═══════════════════════════════════════════════════════════ */
+.main{flex:1;padding:18px 20px;overflow:hidden}
 .campo-view{display:none}.campo-view.active{display:block}
 
-/* ── ADD SLOT BAR ── */
+/* ═══════════════════════════════════════════════════════════
+   ADD SLOT BAR
+═══════════════════════════════════════════════════════════ */
 .add-slot-bar{
-  display:flex;align-items:center;gap:8px;
-  padding:8px 12px;background:#f0f4f8;
-  border-radius:10px;margin-bottom:12px;
+  display:flex;align-items:center;gap:10px;
+  padding:10px 16px;background:var(--surface);
+  border-radius:var(--r);margin-bottom:14px;
+  border:1.5px solid var(--border);
   flex-wrap:wrap;
 }
-.add-slot-bar label{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8c8ca4}
+.add-slot-bar label{
+  font-size:9px;font-weight:800;letter-spacing:.14em;
+  text-transform:uppercase;color:#9ca3af;
+}
 .slot-time-input{
-  border:none;border-bottom:1.5px solid #1a3a5c;
+  border:none;border-bottom:2px solid var(--navy);
   background:transparent;font-family:'Manrope',sans-serif;
-  font-size:14px;color:#1a3a5c;outline:none;
-  width:64px;padding:2px 4px;text-align:center;
+  font-size:15px;font-weight:600;color:var(--navy);outline:none;
+  width:66px;padding:2px 4px;text-align:center;
 }
 .slot-time-input:focus{border-bottom-width:2.5px}
+.arrow-sep{color:#cbd5e1;font-size:14px;font-weight:700}
 .btn-add-slot{
-  padding:7px 14px;background:#1a3a5c;color:#fff;
-  border:none;border-radius:7px;
+  padding:8px 18px;background:var(--navy);color:#fff;
+  border:none;border-radius:var(--r-sm);
   font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;
-  cursor:pointer;transition:background .15s;white-space:nowrap;
+  cursor:pointer;transition:all .15s;white-space:nowrap;
+  letter-spacing:.04em;
 }
-.btn-add-slot:hover{background:#142d47}
+.btn-add-slot:hover{background:#0a1c30;transform:translateY(-1px)}
 
-/* ── TABLE WRAPPER (scroll orizzontale) ── */
+/* ═══════════════════════════════════════════════════════════
+   TABLE
+═══════════════════════════════════════════════════════════ */
 .table-wrap{
   overflow-x:auto;
   -webkit-overflow-scrolling:touch;
-  border-radius:10px;
-  box-shadow:0 2px 12px rgba(0,0,0,.07);
-  background:#fbf9f5;
+  border-radius:var(--r);
+  box-shadow:var(--shadow);
+  border:1.5px solid var(--border);
+  background:var(--surface);
 }
 table{
   width:100%;border-collapse:collapse;
-  table-layout:fixed;
-  min-width:700px;
+  table-layout:fixed;min-width:720px;
 }
+
+/* ── HEADER ── */
 thead th{
-  padding:8px 4px;text-align:center;
-  font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
-  border-bottom:2px solid rgba(26,58,92,.12);
-  white-space:nowrap;background:#fbf9f5;
+  padding:0;text-align:center;
+  border-bottom:2px solid var(--border);
+  background:var(--surface);
   position:sticky;top:0;z-index:2;
+  white-space:nowrap;
 }
 thead th.th-time{
-  width:72px;background:#1a3a5c;color:#fff;
-  border-radius:10px 0 0 0;vertical-align:middle;
+  width:80px;
+  background:var(--navy);
+  border-radius:calc(var(--r) - 2px) 0 0 0;
   position:sticky;left:0;z-index:3;
+  vertical-align:middle;
+  padding:14px 6px;
 }
-thead th.th-weekend{background:rgba(210,190,150,.07)}
-.day-header{display:flex;flex-direction:column;align-items:center;gap:3px;padding:2px 0}
-.day-name{font-size:10px;font-weight:700;color:#1a3a5c}
+.th-time-inner{
+  font-family:'Cormorant Garamond',serif;
+  font-size:13px;color:rgba(255,255,255,.7);
+  font-style:italic;
+}
+thead th.th-weekend{background:#faf5ec}
+.day-header{
+  display:flex;flex-direction:column;
+  align-items:center;gap:5px;
+  padding:11px 6px;
+}
+.day-name{
+  font-size:9px;font-weight:800;letter-spacing:.12em;
+  text-transform:uppercase;color:#94a3b8;
+}
 .day-date{
-  font-size:11px;font-weight:600;color:#1a3a5c;
-  background:rgba(26,58,92,.07);border-radius:4px;
-  padding:1px 7px;min-width:44px;text-align:center;
+  font-size:14px;font-weight:700;color:var(--navy);
+  background:rgba(15,37,64,.06);
+  border-radius:6px;padding:2px 10px;
+  min-width:48px;text-align:center;
+  transition:all .15s;
 }
-.day-date.today{background:#c9a84c;color:#fff}
-tbody tr{border-bottom:1px solid rgba(26,58,92,.08)}
+.day-date.today{
+  background:var(--gold);
+  color:#fff;
+  box-shadow:0 2px 8px rgba(201,168,76,.35);
+}
+.th-weekend .day-name{color:#c4a35a}
+.th-weekend .day-date{background:rgba(201,168,76,.1);color:#7a6030}
+
+/* ── ROWS ── */
+tbody tr{
+  border-bottom:1.5px solid var(--border);
+  transition:background .1s;
+}
+tbody tr:last-child{border-bottom:none}
 tbody td{
-  padding:0;border-right:1px solid rgba(26,58,92,.06);
-  vertical-align:top;transition:background .15s;
-  height:100px;
+  padding:0;border-right:1px solid var(--border);
+  vertical-align:top;
+  height:128px;
+  transition:background .15s;
 }
 tbody td:last-child{border-right:none}
+
+/* ── TIME COLUMN ── */
 tbody td.td-time{
-  background:#e8edf5;border-right:2px solid rgba(26,58,92,.15);
-  text-align:center;vertical-align:middle;position:relative;
+  background:linear-gradient(180deg,#1e3f6a 0%,#152d4d 100%);
+  border-right:2px solid rgba(255,255,255,.08);
+  text-align:center;vertical-align:middle;
   position:sticky;left:0;z-index:1;
+  padding:10px 4px;
 }
-tbody tr:nth-child(even) td:not(.td-time){background:rgba(26,58,92,.012)}
-tbody tr:nth-child(odd) td:not(.td-time){background:#fbf9f5}
-tbody td.td-weekend{background:rgba(210,190,150,.06)!important}
-tbody td.td-booked{background:rgba(26,58,92,.06)!important;border-left:3px solid #1a3a5c!important}
-tbody td.td-booked.sport-tennis{background:rgba(45,125,50,.06)!important;border-left-color:#2d7d32!important}
-tbody td.td-booked.sport-calcio{background:rgba(200,75,0,.06)!important;border-left-color:#c84b00!important}
 .slot-label{
   font-family:'Cormorant Garamond',serif;
-  font-size:16px;color:#1a3a5c;font-weight:700;
-  display:block;line-height:1.1;
+  font-size:22px;color:#fff;font-weight:700;
+  display:block;line-height:1;
+  text-shadow:0 1px 4px rgba(0,0,0,.2);
 }
-.slot-sub{font-size:9px;color:#8c8ca4;display:block;margin-top:1px}
+.slot-sub{
+  font-size:9px;color:rgba(255,255,255,.4);
+  display:block;margin-top:3px;letter-spacing:.05em;
+}
 .btn-del-slot{
-  position:absolute;bottom:3px;left:50%;transform:translateX(-50%);
-  background:none;border:none;cursor:pointer;color:#ccc;
-  font-size:12px;padding:2px 5px;border-radius:4px;transition:color .15s;
+  margin-top:8px;
+  background:rgba(255,255,255,.08);border:none;
+  cursor:pointer;color:rgba(255,255,255,.3);
+  font-size:11px;padding:2px 8px;border-radius:4px;
+  transition:all .15s;display:block;width:calc(100% - 8px);margin-left:4px;
 }
-.btn-del-slot:hover{color:#dc3545}
+.btn-del-slot:hover{background:rgba(239,68,68,.3);color:#fca5a5}
 
-/* ── CELL ── */
+/* ── ZEBRA & WEEKEND ── */
+tbody tr:nth-child(odd) td:not(.td-time){background:var(--surface)}
+tbody tr:nth-child(even) td:not(.td-time){background:var(--surface2)}
+tbody td.td-weekend{background:#fdf9f0!important}
+tbody tr:nth-child(even) td.td-weekend{background:#f9f3e4!important}
+
+/* ── BOOKED CELL ── */
+tbody td.td-booked{
+  background:rgba(26,58,92,.06)!important;
+  border-left:4px solid var(--navy2)!important;
+}
+tbody td.td-booked.sport-tennis{
+  background:rgba(30,107,46,.06)!important;
+  border-left-color:var(--green)!important;
+}
+tbody td.td-booked.sport-calcio{
+  background:rgba(181,58,0,.06)!important;
+  border-left-color:var(--orange)!important;
+}
+
+/* ── CELL CONTENT ── */
 .cell{
-  padding:5px 6px;height:100%;
-  display:flex;flex-direction:column;gap:3px;
+  padding:8px 9px;height:100%;
+  display:flex;flex-direction:column;gap:5px;
+  cursor:default;
 }
-.cell-booked-tag{
-  display:none;font-size:8px;font-weight:700;letter-spacing:.07em;
-  text-transform:uppercase;color:#fff;background:#1a3a5c;
-  border-radius:3px;padding:1px 5px;align-self:flex-start;margin-bottom:1px;
-}
-.sport-tennis .cell-booked-tag{background:#2d7d32}
-.sport-calcio .cell-booked-tag{background:#c84b00}
-td.td-booked .cell-booked-tag{display:inline-block}
-.cell-row{display:grid;grid-template-columns:1fr 1fr;gap:3px}
-.field{display:flex;flex-direction:column;gap:1px}
-.fl{font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;color:#bbb;font-weight:700}
-.fi{
-  border:none;border-bottom:1px solid rgba(26,58,92,.15);
-  background:transparent;font-family:'Manrope',sans-serif;
-  font-size:11px;color:#1a3a5c;outline:none;
-  width:100%;padding:1px 0;transition:border-color .15s;
-}
-.fi.c-tennis{border-bottom-color:rgba(45,125,50,.25)}
-.fi.c-calcio{border-bottom-color:rgba(200,75,0,.25)}
-.fi:focus{border-bottom-width:2px;border-bottom-color:#1a3a5c}
-.fi.c-tennis:focus{border-bottom-color:#2d7d32}
-.fi.c-calcio:focus{border-bottom-color:#c84b00}
 
-/* ── BOTTOM NAV (solo mobile) ── */
+/* booked badge */
+.cell-booked-tag{
+  display:none;
+  font-size:8px;font-weight:800;letter-spacing:.1em;
+  text-transform:uppercase;color:#fff;
+  background:var(--navy2);
+  border-radius:4px;padding:2px 7px;
+  align-self:flex-start;
+}
+.sport-tennis .cell-booked-tag{background:var(--green)}
+.sport-calcio .cell-booked-tag{background:var(--orange)}
+td.td-booked .cell-booked-tag{display:inline-flex;align-items:center;gap:4px}
+td.td-booked .cell-booked-tag::before{content:"●";font-size:6px}
+
+.cell-row{
+  display:grid;grid-template-columns:1fr 1fr;gap:6px;
+  flex:1;
+}
+.field{display:flex;flex-direction:column;gap:2px;min-width:0}
+
+.fl{
+  font-size:8px;letter-spacing:.12em;text-transform:uppercase;
+  color:#b0b8c4;font-weight:700;
+}
+.fi{
+  border:none;border-bottom:1.5px solid rgba(15,37,64,.12);
+  background:transparent;font-family:'Manrope',sans-serif;
+  font-size:12px;font-weight:600;color:var(--navy);
+  outline:none;width:100%;padding:2px 0;
+  transition:border-color .15s;
+  text-overflow:ellipsis;
+}
+.fi::placeholder{color:#d1d5db;font-weight:400}
+.fi:focus{
+  border-bottom-width:2px;
+  border-bottom-color:var(--navy2);
+  background:rgba(26,58,92,.03);
+}
+.fi.c-tennis{border-bottom-color:rgba(30,107,46,.2)}
+.fi.c-tennis:focus{border-bottom-color:var(--green);background:rgba(30,107,46,.03)}
+.fi.c-calcio{border-bottom-color:rgba(181,58,0,.2)}
+.fi.c-calcio:focus{border-bottom-color:var(--orange);background:rgba(181,58,0,.03)}
+
+/* ── HOVER effect on empty cell ── */
+tbody td:not(.td-booked):not(.td-time):hover{
+  background:rgba(15,37,64,.03)!important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════════════════ */
+.footer{
+  background:var(--surface);
+  border-top:2px solid var(--border);
+  padding:12px 20px;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:10px;
+}
+.footer-left{font-size:11px;color:#94a3b8;font-weight:500}
+.footer-stats{display:flex;gap:8px;flex-wrap:wrap}
+.stat{
+  font-size:11px;font-weight:700;padding:4px 12px;
+  border-radius:20px;display:flex;align-items:center;gap:5px;
+}
+.stat::before{content:"";width:7px;height:7px;border-radius:50%;display:inline-block}
+.stat.padel{background:rgba(26,58,92,.08);color:var(--navy2)}
+.stat.padel::before{background:var(--navy2)}
+.stat.tennis{background:rgba(30,107,46,.08);color:var(--green)}
+.stat.tennis::before{background:var(--green)}
+.stat.calcio{background:rgba(181,58,0,.08);color:var(--orange)}
+.stat.calcio::before{background:var(--orange)}
+
+/* ═══════════════════════════════════════════════════════════
+   BOTTOM NAV (mobile)
+═══════════════════════════════════════════════════════════ */
 .bottom-nav{
   display:none;
   position:fixed;bottom:0;left:0;right:0;
-  background:#fbf9f5;
-  border-top:1px solid rgba(26,58,92,.1);
-  padding: 8px 0;
-  padding-bottom: max(8px, env(safe-area-inset-bottom));
+  background:var(--surface);
+  border-top:1.5px solid var(--border);
+  padding:8px 4px;
+  padding-bottom:max(10px,env(safe-area-inset-bottom));
   z-index:200;
-  box-shadow:0 -4px 16px rgba(0,0,0,.08);
+  box-shadow:0 -6px 24px rgba(0,0,0,.1);
 }
 .bottom-nav-inner{
   display:flex;justify-content:space-around;align-items:center;
 }
 .bnav-btn{
-  display:flex;flex-direction:column;align-items:center;gap:2px;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
   background:none;border:none;cursor:pointer;
-  font-family:'Manrope',sans-serif;font-size:9px;font-weight:700;
+  font-family:'Manrope',sans-serif;font-size:8.5px;font-weight:700;
   letter-spacing:.05em;text-transform:uppercase;
-  color:#aaa;padding:4px 8px;border-radius:8px;
-  transition:color .15s;min-width:56px;
+  color:#b0b8c4;padding:5px 8px;border-radius:var(--r-sm);
+  transition:all .15s;min-width:58px;
 }
-.bnav-btn .bnav-icon{font-size:20px;line-height:1}
-.bnav-btn.padel.active{color:#1a3a5c}
-.bnav-btn.tennis.active{color:#2d7d32}
-.bnav-btn.calcio.active{color:#c84b00}
+.bnav-btn .bnav-icon{font-size:22px;line-height:1}
+.bnav-btn.padel.active{color:var(--navy2);background:rgba(26,58,92,.06)}
+.bnav-btn.tennis.active{color:var(--green);background:rgba(30,107,46,.06)}
+.bnav-btn.calcio.active{color:var(--orange);background:rgba(181,58,0,.06)}
 .bnav-badge{
-  font-size:8px;font-weight:700;padding:0 5px;
-  border-radius:8px;background:rgba(0,0,0,.07);
-  margin-top:1px;color:inherit;
+  font-size:9px;font-weight:800;padding:1px 6px;
+  border-radius:10px;background:rgba(0,0,0,.07);
+  color:inherit;
 }
 
-/* ── FOOTER ── */
-.footer{
-  background:#fbf9f5;
-  border-top:1px solid rgba(26,58,92,.08);
-  padding:10px 16px;
-  display:flex;justify-content:space-between;align-items:center;
-  flex-wrap:wrap;gap:8px;
-  font-size:10px;color:#aaa;
-}
-.footer-stats{display:flex;gap:8px;flex-wrap:wrap}
-.stat{
-  font-size:10px;font-weight:700;padding:2px 10px;
-  border-radius:10px;
-}
-.stat.padel{background:#e8edf5;color:#1a3a5c}
-.stat.tennis{background:#e8f5e9;color:#2d7d32}
-.stat.calcio{background:#fff0e6;color:#c84b00}
-
-/* ── TOAST ── */
+/* ═══════════════════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════════════════ */
 .toast{
-  position:fixed;bottom:max(22px, calc(env(safe-area-inset-bottom) + 70px));right:16px;
-  padding:10px 16px;border-radius:8px;
-  font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;
-  z-index:9999;opacity:0;transform:translateY(8px);
-  transition:all .3s;pointer-events:none;max-width:300px;
+  position:fixed;
+  bottom:max(24px,calc(env(safe-area-inset-bottom)+72px));
+  right:18px;
+  padding:12px 18px;border-radius:var(--r);
+  font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;
+  z-index:9999;opacity:0;transform:translateY(10px);
+  transition:all .3s cubic-bezier(.34,1.56,.64,1);
+  pointer-events:none;max-width:320px;
+  box-shadow:0 8px 24px rgba(0,0,0,.12);
 }
 .toast.show{opacity:1;transform:translateY(0)}
-.toast.success{background:#d1e7dd;color:#0a3622;border:1px solid #a3cfbb}
-.toast.info{background:#e8edf5;color:#1a3a5c;border:1px solid #1a3a5c44}
-.toast.error{background:#f8d7da;color:#842029;border:1px solid #f1aeb5}
+.toast.success{background:#d1fae5;color:#065f46;border:1px solid #6ee7b7}
+.toast.info{background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe}
+.toast.error{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5}
 
-/* ── MODAL prenotazione (mobile tap) ── */
+/* ═══════════════════════════════════════════════════════════
+   MODAL (mobile bottom sheet)
+═══════════════════════════════════════════════════════════ */
 .modal-overlay{
   display:none;position:fixed;inset:0;
-  background:rgba(0,0,0,.45);z-index:500;
+  background:rgba(0,0,0,.5);z-index:500;
   align-items:flex-end;justify-content:center;
+  backdrop-filter:blur(2px);
 }
 .modal-overlay.open{display:flex}
 .modal-box{
-  background:#fbf9f5;border-radius:18px 18px 0 0;
-  padding:20px 20px calc(20px + env(safe-area-inset-bottom));
-  width:100%;max-width:500px;
-  box-shadow:0 -8px 32px rgba(0,0,0,.15);
-  animation:slideUp .25s ease;
+  background:var(--surface);border-radius:20px 20px 0 0;
+  padding:20px 22px calc(22px + env(safe-area-inset-bottom));
+  width:100%;max-width:520px;
+  box-shadow:0 -12px 40px rgba(0,0,0,.18);
+  animation:slideUp .28s cubic-bezier(.34,1.36,.64,1);
 }
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes slideUp{from{transform:translateY(110%)}to{transform:translateY(0)}}
 .modal-handle{
-  width:36px;height:4px;background:rgba(0,0,0,.15);
-  border-radius:2px;margin:0 auto 16px;
+  width:40px;height:4px;background:#e2e8f0;
+  border-radius:2px;margin:0 auto 18px;
 }
 .modal-title{
   font-family:'Cormorant Garamond',serif;
-  font-size:20px;color:#1a3a5c;font-weight:700;
-  margin-bottom:14px;
+  font-size:22px;color:var(--navy);font-weight:700;
+  margin-bottom:16px;line-height:1.1;
 }
-.modal-fields{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
-.modal-field{display:flex;flex-direction:column;gap:4px}
-.modal-label{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#aaa;font-weight:700}
+.modal-sport-tag{
+  display:inline-block;font-size:9px;font-weight:800;
+  letter-spacing:.12em;text-transform:uppercase;
+  padding:2px 8px;border-radius:4px;
+  background:rgba(26,58,92,.1);color:var(--navy2);
+  margin-bottom:12px;
+}
+.modal-sport-tag.tennis{background:rgba(30,107,46,.1);color:var(--green)}
+.modal-sport-tag.calcio{background:rgba(181,58,0,.1);color:var(--orange)}
+.modal-fields{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;
+}
+.modal-field{display:flex;flex-direction:column;gap:5px}
+.modal-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#9ca3af;font-weight:700}
 .modal-input{
-  border:none;border-bottom:1.5px solid rgba(26,58,92,.2);
+  border:none;border-bottom:2px solid rgba(15,37,64,.15);
   background:transparent;font-family:'Manrope',sans-serif;
-  font-size:15px;color:#1a3a5c;outline:none;padding:3px 0;
+  font-size:16px;font-weight:600;color:var(--navy);outline:none;padding:4px 0;
+  transition:border-color .15s;
 }
-.modal-input:focus{border-bottom-color:#1a3a5c;border-bottom-width:2px}
+.modal-input:focus{border-bottom-color:var(--navy);border-bottom-width:2.5px}
 .modal-actions{display:flex;gap:8px}
 .modal-btn{
-  flex:1;padding:12px;border:none;border-radius:10px;
+  flex:1;padding:13px;border:none;border-radius:var(--r);
   font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;
-  cursor:pointer;transition:all .15s;
+  cursor:pointer;transition:all .15s;letter-spacing:.03em;
 }
-.modal-btn.primary{background:#1a3a5c;color:#fff}
-.modal-btn.primary.tennis{background:#2d7d32}
-.modal-btn.primary.calcio{background:#c84b00}
-.modal-btn.secondary{background:#e9ecef;color:#495057}
-.modal-btn.clear{background:#f8d7da;color:#842029}
+.modal-btn.primary{background:var(--navy2);color:#fff}
+.modal-btn.primary:hover{background:var(--navy);transform:translateY(-1px)}
+.modal-btn.primary.tennis{background:var(--green)}
+.modal-btn.primary.calcio{background:var(--orange)}
+.modal-btn.secondary{background:#f1f5f9;color:#64748b}
+.modal-btn.secondary:hover{background:#e2e8f0}
+.modal-btn.clear{background:#fee2e2;color:#991b1b}
+.modal-btn.clear:hover{background:#fecaca}
 
-/* ── RESPONSIVE ── */
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+═══════════════════════════════════════════════════════════ */
 
-/* TABLET (≥768px) */
+/* TABLET ≥768 */
 @media(min-width:768px){
-  .app{padding:0}
-  .topbar{padding:14px 24px;padding-top:max(14px,env(safe-area-inset-top))}
-  .topbar-title{font-size:24px}
-  .main{padding:16px 24px}
-  tbody td{height:110px}
-}
-
-/* DESKTOP (≥1024px) */
-@media(min-width:1024px){
-  .app{background:#ece7de;padding:20px}
-  .topbar{border-radius:14px 14px 0 0}
+  .topbar{padding:16px 28px;padding-top:max(16px,env(safe-area-inset-top))}
+  .topbar-title{font-size:26px}
   .weekbar{padding:12px 28px}
-  .tabs-wrap{padding:10px 28px 0}
+  .tabs-wrap{padding:0 28px}
   .main{padding:20px 28px}
-  .footer{padding:12px 28px;border-radius:0 0 14px 14px}
-  body{display:flex;align-items:flex-start;justify-content:center;padding:20px}
-  .app{border-radius:14px;box-shadow:0 8px 40px rgba(0,0,0,.13);overflow:hidden;position:relative;background:#fbf9f5}
-  tbody td{height:120px}
+  .footer{padding:13px 28px}
+  tbody td{height:132px}
 }
 
-/* MOBILE (≤639px) */
+/* DESKTOP ≥1100 */
+@media(min-width:1100px){
+  body{
+    display:flex;align-items:flex-start;
+    justify-content:center;padding:24px;
+    min-height:100vh;
+  }
+  .app{
+    border-radius:16px;
+    box-shadow:0 12px 60px rgba(0,0,0,.15),0 2px 8px rgba(0,0,0,.08);
+    overflow:hidden;background:var(--surface);
+    min-height:auto;
+  }
+  .topbar{border-radius:16px 16px 0 0}
+  .footer{border-radius:0 0 16px 16px}
+  tbody td{height:138px}
+  .slot-label{font-size:24px}
+}
+
+/* MOBILE ≤639 */
 @media(max-width:639px){
   .topbar-sub{display:none}
-  .week-inputs .ctrl-group:first-child .ctrl-input{width:90px}
-  .ctrl-group:nth-child(2){display:none} /* nasconde Al (domenica) */
   .bottom-nav{display:block}
-  .footer{padding-bottom:calc(72px + env(safe-area-inset-bottom))}
-  .main{padding:12px;padding-bottom:calc(80px + env(safe-area-inset-bottom))}
-  .toast{bottom:max(80px, calc(env(safe-area-inset-bottom) + 76px))}
-  /* Su mobile la tabella mostra solo giorno attivo */
   .tabs-wrap{display:none}
-  /* week range più corto */
-  .week-range{font-size:11px}
-  .weekbar{padding:8px 12px;gap:6px}
+  .main{
+    padding:12px;
+    padding-bottom:calc(76px + env(safe-area-inset-bottom));
+  }
+  .footer{
+    padding-bottom:calc(72px + env(safe-area-inset-bottom));
+    font-size:10px;
+  }
+  .toast{bottom:max(82px,calc(env(safe-area-inset-bottom)+78px))}
+  .weekbar{padding:9px 12px;gap:7px}
+  .week-range{font-size:12px}
+  .ctrl-group:nth-child(2){display:none}
+  .ctrl-input{width:95px}
 }
 
 /* PRINT */
 @media print{
-  .topbar,.weekbar,.tabs-wrap,.footer,.add-slot-bar,.btn-del-slot,.bottom-nav,.modal-overlay{display:none!important}
+  .topbar,.weekbar,.tabs-wrap,.footer,.add-slot-bar,
+  .btn-del-slot,.bottom-nav,.modal-overlay,.toast{display:none!important}
   .campo-view{display:block!important}
-  body,html,.app{background:#fff}
-  .table-wrap{box-shadow:none;border-radius:0}
-  tbody td{height:80px}
+  body,html,.app{background:#fff;box-shadow:none}
+  .table-wrap{box-shadow:none;border-radius:0;border:1px solid #ddd}
+  tbody td{height:90px}
+  .topbar{display:none}
 }
 </style>
 </head>
 <body>
 <div class="app">
 
-<!-- TOP BAR -->
+<!-- ═══ TOP BAR ═══ -->
 <header class="topbar">
   <div class="topbar-brand">
-    <div class="topbar-title">&#127�; Registro Campi</div>
-    <div class="topbar-sub">Padel · Tennis · Calcio — Settimanale</div>
+    <div class="topbar-title">Registro Campi</div>
+    <div class="topbar-sub">Padel &nbsp;·&nbsp; Tennis &nbsp;·&nbsp; Calcio &nbsp;—&nbsp; Settimanale</div>
   </div>
   <div class="topbar-actions">
     <span class="status-pill idle" id="status-bar">Pronto</span>
-    <button class="icon-btn" onclick="window.print()" title="Stampa">🖨</button>
-    <button class="icon-btn danger" onclick="clearAllConfirm()" title="Svuota">🗑</button>
-    <button class="icon-btn accent" onclick="saveAll()" title="Salva" id="btn-save">💾</button>
+    <button class="icon-btn" onclick="window.print()" title="Stampa">🖨️</button>
+    <button class="icon-btn red" onclick="clearAllConfirm()" title="Svuota">🗑️</button>
+    <button class="icon-btn gold" onclick="saveAll()" id="btn-save" title="Salva">💾</button>
   </div>
 </header>
 
-<!-- WEEK BAR -->
+<!-- ═══ WEEK BAR ═══ -->
 <div class="weekbar">
   <div class="week-nav-group">
-    <button class="week-btn" onclick="navWeek(-1)" title="Settimana precedente">&#8592;</button>
+    <button class="week-btn" onclick="navWeek(-1)" title="Settimana prec.">&#8592;</button>
     <button class="week-btn today-btn" onclick="goToCurrentWeek()">OGGI</button>
     <span class="week-range" id="week-range">—</span>
-    <button class="week-btn" onclick="navWeek(1)" title="Settimana successiva">&#8594;</button>
+    <button class="week-btn" onclick="navWeek(1)" title="Settimana succ.">&#8594;</button>
   </div>
-  <div class="week-inputs">
+  <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
     <div class="ctrl-group">
       <span class="ctrl-label">Dal (Lun)</span>
       <input class="ctrl-input" id="date-from" type="text" placeholder="gg/mm/aaaa" autocomplete="off" maxlength="10" inputmode="numeric">
@@ -475,13 +644,13 @@ td.td-booked .cell-booked-tag{display:inline-block}
     </div>
     <div class="ctrl-group">
       <span class="ctrl-label">Responsabile</span>
-      <input class="ctrl-input" id="responsabile" type="text" placeholder="Nome..." style="width:110px">
+      <input class="ctrl-input" id="responsabile" type="text" placeholder="Nome..." style="width:115px">
     </div>
   </div>
   <span class="sync-badge" id="sync-info"></span>
 </div>
 
-<!-- TABS (desktop/tablet) -->
+<!-- ═══ TABS ═══ -->
 <div class="tabs-wrap">
   <div class="tabs">
     <button class="tab-btn padel active" id="tab-padel1" onclick="showCampo('padel1')">🎾 Padel 1 <span class="badge" id="cnt-padel1">0</span></button>
@@ -492,14 +661,14 @@ td.td-booked .cell-booked-tag{display:inline-block}
   </div>
 </div>
 
-<!-- MAIN -->
+<!-- ═══ MAIN ═══ -->
 <main class="main">
   <div id="views-container"></div>
 </main>
 
-<!-- FOOTER -->
+<!-- ═══ FOOTER ═══ -->
 <footer class="footer">
-  <span id="footer-info" style="font-size:10px">Nessuna settimana selezionata</span>
+  <span class="footer-left" id="footer-info">Nessuna settimana selezionata</span>
   <div class="footer-stats">
     <span class="stat padel" id="stat-padel">Padel: 0</span>
     <span class="stat tennis" id="stat-tennis">Tennis: 0</span>
@@ -507,42 +676,48 @@ td.td-booked .cell-booked-tag{display:inline-block}
   </div>
 </footer>
 
-<!-- BOTTOM NAV (mobile) -->
+<!-- ═══ BOTTOM NAV ═══ -->
 <nav class="bottom-nav">
   <div class="bottom-nav-inner">
     <button class="bnav-btn padel active" id="bnav-padel1" onclick="showCampo('padel1')">
-      <span class="bnav-icon">🎾</span>Padel 1<span class="bnav-badge" id="bcnt-padel1">0</span>
+      <span class="bnav-icon">🎾</span>Padel 1
+      <span class="bnav-badge" id="bcnt-padel1">0</span>
     </button>
     <button class="bnav-btn padel" id="bnav-padel2" onclick="showCampo('padel2')">
-      <span class="bnav-icon">🎾</span>Padel 2<span class="bnav-badge" id="bcnt-padel2">0</span>
+      <span class="bnav-icon">🎾</span>Padel 2
+      <span class="bnav-badge" id="bcnt-padel2">0</span>
     </button>
     <button class="bnav-btn tennis" id="bnav-tennis1" onclick="showCampo('tennis1')">
-      <span class="bnav-icon">🎾</span>Tennis 1<span class="bnav-badge" id="bcnt-tennis1">0</span>
+      <span class="bnav-icon">🎾</span>Tennis 1
+      <span class="bnav-badge" id="bcnt-tennis1">0</span>
     </button>
     <button class="bnav-btn tennis" id="bnav-tennis2" onclick="showCampo('tennis2')">
-      <span class="bnav-icon">🎾</span>Tennis 2<span class="bnav-badge" id="bcnt-tennis2">0</span>
+      <span class="bnav-icon">🎾</span>Tennis 2
+      <span class="bnav-badge" id="bcnt-tennis2">0</span>
     </button>
     <button class="bnav-btn calcio" id="bnav-calcio" onclick="showCampo('calcio')">
-      <span class="bnav-icon">⚽</span>Calcio<span class="bnav-badge" id="bcnt-calcio">0</span>
+      <span class="bnav-icon">⚽</span>Calcio
+      <span class="bnav-badge" id="bcnt-calcio">0</span>
     </button>
   </div>
 </nav>
 
-<!-- MODAL prenotazione (mobile) -->
+<!-- ═══ MODAL ═══ -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModalOnOverlay(event)">
-  <div class="modal-box" id="modal-box">
+  <div class="modal-box">
     <div class="modal-handle"></div>
     <div class="modal-title" id="modal-title">Prenotazione</div>
+    <div class="modal-sport-tag" id="modal-sport-tag">Padel</div>
     <div class="modal-fields">
-      <div class="modal-field"><span class="modal-label">Nome</span><input class="modal-input" id="m-nome" type="text" placeholder="—" autocomplete="off"></div>
-      <div class="modal-field"><span class="modal-label">Telefono</span><input class="modal-input" id="m-tel" type="tel" placeholder="—" autocomplete="off"></div>
-      <div class="modal-field"><span class="modal-label">Istruttore</span><input class="modal-input" id="m-istr" type="text" placeholder="—" autocomplete="off"></div>
-      <div class="modal-field"><span class="modal-label">Importo</span><input class="modal-input" id="m-importo" type="text" placeholder="€" autocomplete="off"></div>
+      <div class="modal-field"><span class="modal-label">👤 Nome</span><input class="modal-input" id="m-nome" type="text" placeholder="—" autocomplete="off"></div>
+      <div class="modal-field"><span class="modal-label">📞 Telefono</span><input class="modal-input" id="m-tel" type="tel" placeholder="—" autocomplete="off"></div>
+      <div class="modal-field"><span class="modal-label">🎓 Istruttore</span><input class="modal-input" id="m-istr" type="text" placeholder="—" autocomplete="off"></div>
+      <div class="modal-field"><span class="modal-label">💶 Importo</span><input class="modal-input" id="m-importo" type="text" placeholder="€" autocomplete="off" inputmode="decimal"></div>
     </div>
     <div class="modal-actions">
       <button class="modal-btn secondary" onclick="closeModal()">Annulla</button>
-      <button class="modal-btn clear" onclick="clearModal()">Cancella</button>
-      <button class="modal-btn primary" id="modal-save-btn" onclick="saveModal()">Conferma</button>
+      <button class="modal-btn clear" onclick="clearModal()">🗑 Cancella</button>
+      <button class="modal-btn primary" id="modal-save-btn" onclick="saveModal()">✓ Conferma</button>
     </div>
   </div>
 </div>
@@ -550,28 +725,27 @@ td.td-booked .cell-booked-tag{display:inline-block}
 <div class="toast" id="toast"></div>
 
 <script>
-// ── SUPABASE ────────────────────────────────────────────────────────────
+// ═══ SUPABASE ═══════════════════════════════════════════════════════
 const SB_URL='https://xjucqvcbhknfdyjtdwbr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqdWNxdmNiaGtuZmR5anRkd2JyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMzg4OTgsImV4cCI6MjA5NTYxNDg5OH0.uitw5FUJx1XmDsBpjdS6u2DV2qUpqMPbzktlkW4BGpY';
 const TABLE='prenotazioni_settimane';
 async function sbFetch(path,opts={}){
-  const res=await fetch(SB_URL+'/rest/v1/'+path,{
-    ...opts,headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':opts.prefer||'',...(opts.headers||{})}
-  });
-  if(!res.ok){const e=await res.text();throw new Error(e);}
-  const t=await res.text();return t?JSON.parse(t):null;
+  const r=await fetch(SB_URL+'/rest/v1/'+path,{...opts,headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':opts.prefer||'',...(opts.headers||{})}});
+  if(!r.ok){throw new Error(await r.text());}
+  const t=await r.text();return t?JSON.parse(t):null;
 }
 async function dbLoad(key){
   const r=await sbFetch(`${TABLE}?id=eq.${encodeURIComponent(key)}&select=*`);
   return r&&r.length?r[0]:null;
 }
-async function dbSave(payload){
-  await sbFetch(TABLE,{method:'POST',prefer:'resolution=merge-duplicates',headers:{'Prefer':'resolution=merge-duplicates'},body:JSON.stringify(payload)});
+async function dbSave(p){
+  await sbFetch(TABLE,{method:'POST',prefer:'resolution=merge-duplicates',headers:{'Prefer':'resolution=merge-duplicates'},body:JSON.stringify(p)});
 }
 
-// ── COSTANTI ──────────────────────────────────────────────────────────
+// ═══ COSTANTI ════════════════════════════════════════════════════════
 const CAMPI=['padel1','padel2','tennis1','tennis2','calcio'];
 const SPORT={padel1:'padel',padel2:'padel',tennis1:'tennis',tennis2:'tennis',calcio:'calcio'};
+const SPORT_LABEL={padel:'🎾 Padel',tennis:'🎾 Tennis',calcio:'⚽ Calcio'};
 const DAYS=['Lun','Mar','Mer','Gio','Ven','Sab','Dom'];
 const DAYS_FULL=['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'];
 const WEEKEND=[5,6];
@@ -579,9 +753,9 @@ const FIELDS=['nome','tel','istr','importo'];
 const DEFAULT_SLOTS=['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00'];
 let campoSlots={};
 CAMPI.forEach(c=>{campoSlots[c]=[...DEFAULT_SLOTS];});
-let isMobile=()=>window.innerWidth<640;
+const isMobile=()=>window.innerWidth<640;
 
-// ── MOBILE MODAL state ────────────────────────────────────────────────
+// ═══ MODAL ═══════════════════════════════════════════════════════════
 let _modalCell=null;
 function openModal(cell){
   _modalCell=cell;
@@ -589,72 +763,53 @@ function openModal(cell){
   const sport=SPORT[campo];
   const dayDate=document.querySelector(`#view-${campo} .day-date[data-day-idx="${day}"]`)?.textContent||'';
   document.getElementById('modal-title').textContent=`${slot} — ${DAYS_FULL[day]} ${dayDate}`;
+  const tag=document.getElementById('modal-sport-tag');
+  tag.textContent=SPORT_LABEL[sport];
+  tag.className='modal-sport-tag'+(sport!=='padel'?' '+sport:'');
   FIELDS.forEach(f=>{document.getElementById('m-'+f).value=cell.querySelector('.fi-'+f)?.value||'';});
   const btn=document.getElementById('modal-save-btn');
   btn.className='modal-btn primary'+(sport!=='padel'?' '+sport:'');
   document.getElementById('modal-overlay').classList.add('open');
-  setTimeout(()=>document.getElementById('m-nome').focus(),100);
+  setTimeout(()=>document.getElementById('m-nome').focus(),120);
 }
-function closeModal(){
-  document.getElementById('modal-overlay').classList.remove('open');
-  _modalCell=null;
-}
-function closeModalOnOverlay(e){
-  if(e.target===document.getElementById('modal-overlay'))closeModal();
-}
-function clearModal(){
-  FIELDS.forEach(f=>{document.getElementById('m-'+f).value='';});
-}
+function closeModal(){document.getElementById('modal-overlay').classList.remove('open');_modalCell=null;}
+function closeModalOnOverlay(e){if(e.target===document.getElementById('modal-overlay'))closeModal();}
+function clearModal(){FIELDS.forEach(f=>{document.getElementById('m-'+f).value='';});}
 function saveModal(){
   if(!_modalCell)return;
-  FIELDS.forEach(f=>{
-    const inp=_modalCell.querySelector('.fi-'+f);
-    if(inp)inp.value=document.getElementById('m-'+f).value;
-  });
-  refreshCellState(_modalCell);
-  updateCounters();
-  closeModal();
+  FIELDS.forEach(f=>{const i=_modalCell.querySelector('.fi-'+f);if(i)i.value=document.getElementById('m-'+f).value;});
+  refreshCellState(_modalCell);updateCounters();closeModal();
   showToast('✅ Prenotazione salvata','success');
 }
 
-// ── DATE UTILS ────────────────────────────────────────────────────────
-function parseIT(str){
-  if(!str)return null;
-  const p=str.trim().split('/');
+// ═══ DATE / TIME UTILS ═══════════════════════════════════════════════
+function parseIT(s){
+  if(!s)return null;
+  const p=s.trim().split('/');
   if(p.length!==3)return null;
-  const dt=new Date(+p[2],+p[1]-1,+p[0]);
-  return isNaN(dt)?null:dt;
+  const d=new Date(+p[2],+p[1]-1,+p[0]);
+  return isNaN(d)?null:d;
 }
-function fmtIT(dt){return String(dt.getDate()).padStart(2,'0')+'/'+String(dt.getMonth()+1).padStart(2,'0')+'/'+dt.getFullYear();}
-function fmtShort(dt){return String(dt.getDate()).padStart(2,'0')+'/'+String(dt.getMonth()+1).padStart(2,'0');}
-function getMondayOf(d){
-  const dt=new Date(d);dt.setHours(0,0,0,0);
-  const day=dt.getDay();dt.setDate(dt.getDate()+(day===0?-6:1-day));return dt;
-}
+function fmtIT(d){return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();}
+function fmtShort(d){return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0');}
+function getMondayOf(d){const dt=new Date(d);dt.setHours(0,0,0,0);const day=dt.getDay();dt.setDate(dt.getDate()+(day===0?-6:1-day));return dt;}
 function todayMidnight(){const d=new Date();d.setHours(0,0,0,0);return d;}
-
-// ── TIME UTILS ────────────────────────────────────────────────────────
-function normalizeTime(str){
-  str=str.trim().replace(/[.,]/g,':');
+function normalizeTime(s){
+  s=s.trim().replace(/[.,]/g,':');
   let h,m='00';
-  if(str.includes(':')){[h,m]=str.split(':');}
-  else if(str.length<=2){h=str;}
-  else{h=str.slice(0,-2);m=str.slice(-2);}
+  if(s.includes(':')){[h,m]=s.split(':');}
+  else if(s.length<=2)h=s;
+  else{h=s.slice(0,-2);m=s.slice(-2);}
   h=parseInt(h);m=parseInt(m);
   if(isNaN(h)||isNaN(m)||h<0||h>23||m<0||m>59)return null;
   return h.toString().padStart(2,'0')+':'+m.toString().padStart(2,'0');
 }
-function nextHour(t){
-  const[h,m]=t.split(':').map(Number);
-  return((h+1)%24).toString().padStart(2,'0')+':'+m.toString().padStart(2,'0');
-}
+function nextHour(t){const[h,m]=t.split(':').map(Number);return((h+1)%24).toString().padStart(2,'0')+':'+m.toString().padStart(2,'0');}
 function slotKey(t){return t.replace(':','');}
-
-// ── KEYS ──────────────────────────────────────────────────────────────
 function weekKey(s){return s?'rc_'+s.replace(/\//g,'_'):null;}
 function currentWeekKey(){return weekKey(document.getElementById('date-from').value.trim());}
 
-// ── META / HEADER (no render) ─────────────────────────────────────────
+// ═══ META ════════════════════════════════════════════════════════════
 function syncWeekMeta(from){
   if(!from){
     document.getElementById('date-to').value='';
@@ -681,29 +836,30 @@ function refreshDateHeaders(from){
   });
 }
 
-// ── RENDER CAMPO ──────────────────────────────────────────────────────
+// ═══ RENDER ══════════════════════════════════════════════════════════
 function renderCampo(campo){
   const sport=SPORT[campo],cc=sport==='padel'?'':'c-'+sport,slots=campoSlots[campo];
   let html=`<div class="add-slot-bar">
-    <label>Orario:</label>
+    <label>Aggiungi orario</label>
     <input class="slot-time-input" id="nss-${campo}" placeholder="09:30" maxlength="5" inputmode="numeric">
-    <span style="color:#ccc;font-size:12px">→</span>
-    <input class="slot-time-input" id="nse-${campo}" placeholder="11:00" maxlength="5" inputmode="numeric">
-    <button class="btn-add-slot" onclick="addSlot('${campo}')">+ Aggiungi</button>
-  </div><div class="table-wrap"><table><thead><tr><th class="th-time">Orario</th>`;
+    <span class="arrow-sep">→</span>
+    <input class="slot-time-input" id="nse-${campo}" placeholder="fine" maxlength="5" inputmode="numeric">
+    <button class="btn-add-slot" onclick="addSlot('${campo}')">+ Aggiungi slot</button>
+    <span style="font-size:10px;color:#94a3b8">Es: 09:30 → 11:00</span>
+  </div><div class="table-wrap"><table><thead><tr><th class="th-time"><div class="th-time-inner">orario</div></th>`;
   DAYS.forEach((d,i)=>{
     const wk=WEEKEND.includes(i)?' th-weekend':'';
     html+=`<th class="th-day${wk}"><div class="day-header"><span class="day-name">${d}</span><span class="day-date" data-day-idx="${i}">—</span></div></th>`;
   });
   html+=`</tr></thead><tbody>`;
   if(!slots.length){
-    html+=`<tr><td colspan="8" style="text-align:center;color:#aaa;font-size:12px;padding:24px">Aggiungi slot orari sopra</td></tr>`;
+    html+=`<tr><td colspan="8" style="text-align:center;color:#94a3b8;font-size:13px;padding:40px 20px">Nessun orario — usa la barra sopra per aggiungere slot.</td></tr>`;
   }else{
     slots.forEach(slot=>{
-      html+=`<tr><td class="td-time"><span class="slot-label">${slot}</span><span class="slot-sub">↓${nextHour(slot)}</span><button class="btn-del-slot" onclick="removeSlot('${campo}','${slot}')" title="Rimuovi">✕</button></td>`;
+      html+=`<tr><td class="td-time"><span class="slot-label">${slot}</span><span class="slot-sub">fino alle ${nextHour(slot)}</span><button class="btn-del-slot" onclick="removeSlot('${campo}','${slot}')" title="Rimuovi orario">✕ rimuovi</button></td>`;
       DAYS.forEach((_,di)=>{
         const wkc=WEEKEND.includes(di)?' td-weekend':'';
-        html+=`<td class="${wkc}" id="td-${campo}-${slotKey(slot)}-${di}"><div class="cell" data-campo="${campo}" data-slot="${slot}" data-day="${di}"><span class="cell-booked-tag">Prenotato</span><div class="cell-row"><div class="field"><span class="fl">Nome</span><input class="fi ${cc} fi-nome" type="text" placeholder="—" autocomplete="off"></div><div class="field"><span class="fl">Tel</span><input class="fi ${cc} fi-tel" type="tel" placeholder="—" autocomplete="off"></div></div><div class="cell-row"><div class="field"><span class="fl">Istr.</span><input class="fi ${cc} fi-istr" type="text" placeholder="—" autocomplete="off"></div><div class="field"><span class="fl">€</span><input class="fi ${cc} fi-importo" type="text" placeholder="—" autocomplete="off"></div></div></div></td>`;
+        html+=`<td class="${wkc}" id="td-${campo}-${slotKey(slot)}-${di}"><div class="cell" data-campo="${campo}" data-slot="${slot}" data-day="${di}"><span class="cell-booked-tag">Prenotato</span><div class="cell-row"><div class="field"><span class="fl">Nome</span><input class="fi ${cc} fi-nome" type="text" placeholder="—" autocomplete="off"></div><div class="field"><span class="fl">Telefono</span><input class="fi ${cc} fi-tel" type="tel" placeholder="—" autocomplete="off"></div></div><div class="cell-row"><div class="field"><span class="fl">Istruttore</span><input class="fi ${cc} fi-istr" type="text" placeholder="—" autocomplete="off"></div><div class="field"><span class="fl">Importo €</span><input class="fi ${cc} fi-importo" type="text" placeholder="—" autocomplete="off"></div></div></div></td>`;
       });
       html+=`</tr>`;
     });
@@ -711,23 +867,20 @@ function renderCampo(campo){
   html+=`</tbody></table></div>`;
   const view=document.getElementById('view-'+campo);
   view.innerHTML=html;
-  // listeners desktop
   view.querySelectorAll('.fi').forEach(inp=>{
     inp.addEventListener('input',()=>{refreshCellState(inp.closest('.cell'));updateCounters();});
   });
-  // listeners mobile: tap su cella apre modal
   view.querySelectorAll('.cell').forEach(cell=>{
     cell.addEventListener('click',e=>{
       if(!isMobile())return;
       if(e.target.tagName==='INPUT')return;
       openModal(cell);
     });
-    // touch feedback
-    cell.addEventListener('touchstart',()=>cell.style.background='rgba(26,58,92,.04)',{passive:true});
+    cell.addEventListener('touchstart',()=>cell.style.background='rgba(15,37,64,.04)',{passive:true});
     cell.addEventListener('touchend',()=>cell.style.background='',{passive:true});
   });
   const si=document.getElementById('nss-'+campo),ei=document.getElementById('nse-'+campo);
-  if(si)si.addEventListener('keydown',e=>{if(e.key==='Enter')ei&&ei.focus();});
+  if(si)si.addEventListener('keydown',e=>{if(e.key==='Enter'&&ei)ei.focus();});
   if(ei)ei.addEventListener('keydown',e=>{if(e.key==='Enter')addSlot(campo);});
 }
 function renderAllCampi(){CAMPI.forEach(renderCampo);}
@@ -742,11 +895,11 @@ function buildViews(){
   renderAllCampi();
 }
 
-// ── ADD / REMOVE SLOT ──────────────────────────────────────────────
+// ═══ SLOT MGMT ═══════════════════════════════════════════════════════
 function addSlot(campo){
   const si=document.getElementById('nss-'+campo),ei=document.getElementById('nse-'+campo);
   const start=normalizeTime(si.value);
-  if(!start){showToast('⚠️ Orario non valido','error');si.focus();return;}
+  if(!start){showToast('⚠️ Orario non valido (es: 09:30)','error');si.focus();return;}
   if(campoSlots[campo].includes(start)){showToast('ℹ️ '+start+' già presente','info');return;}
   const end=ei.value.trim()?normalizeTime(ei.value):nextHour(start);
   const existing=collectCampoData(campo);
@@ -757,23 +910,23 @@ function addSlot(campo){
   showToast('✅ Slot '+start+' → '+(end||nextHour(start))+' aggiunto','success');
 }
 function removeSlot(campo,slot){
-  if(!confirm(`Rimuovere slot ${slot}?\nI dati andranno persi.`))return;
+  if(!confirm(`Rimuovere lo slot ${slot}? I dati andranno persi.`))return;
   const existing=collectCampoData(campo);
   const from=parseIT(document.getElementById('date-from').value.trim());
   campoSlots[campo]=campoSlots[campo].filter(s=>s!==slot);
   renderCampo(campo);
   const filtered=Object.fromEntries(Object.entries(existing).filter(([k])=>!k.startsWith(`${campo}||${slot}||`)));
   restoreCampoData(campo,filtered);refreshDateHeaders(from);updateCounters();
-  showToast('🗑 Slot '+slot+' rimosso','info');
+  showToast('🗑️ Slot '+slot+' rimosso','info');
 }
 
-// ── COLLECT / RESTORE ────────────────────────────────────────────────
+// ═══ DATA ════════════════════════════════════════════════════════════
 function collectCampoData(campo){
   const data={};
   document.querySelectorAll(`.cell[data-campo="${campo}"]`).forEach(cell=>{
     const k=`${cell.dataset.campo}||${cell.dataset.slot}||${cell.dataset.day}`;
-    const entry={};FIELDS.forEach(f=>{entry[f]=cell.querySelector('.fi-'+f)?.value||'';});
-    if(FIELDS.some(f=>entry[f]))data[k]=entry;
+    const e={};FIELDS.forEach(f=>{e[f]=cell.querySelector('.fi-'+f)?.value||'';});
+    if(FIELDS.some(f=>e[f]))data[k]=e;
   });return data;
 }
 function restoreCampoData(campo,data){
@@ -781,7 +934,7 @@ function restoreCampoData(campo,data){
     const[c,slot,day]=k.split('||');if(c!==campo)return;
     const cell=document.querySelector(`.cell[data-campo="${c}"][data-slot="${slot}"][data-day="${day}"]`);
     if(!cell)return;
-    FIELDS.forEach(f=>{const inp=cell.querySelector('.fi-'+f);if(inp)inp.value=v[f]||'';});
+    FIELDS.forEach(f=>{const i=cell.querySelector('.fi-'+f);if(i)i.value=v[f]||'';});
     refreshCellState(cell);
   });
 }
@@ -791,12 +944,10 @@ function restoreAllData(slots){
     const[campo,slot,day]=k.split('||');
     const cell=document.querySelector(`.cell[data-campo="${campo}"][data-slot="${slot}"][data-day="${day}"]`);
     if(!cell)return;
-    FIELDS.forEach(f=>{const inp=cell.querySelector('.fi-'+f);if(inp)inp.value=v[f]||'';});
+    FIELDS.forEach(f=>{const i=cell.querySelector('.fi-'+f);if(i)i.value=v[f]||'';});
     refreshCellState(cell);
   });
 }
-
-// ── CELL STATE ────────────────────────────────────────────────────────
 function refreshCellState(cell){
   if(!cell)return;
   const td=cell.closest('td');if(!td)return;
@@ -806,17 +957,16 @@ function refreshCellState(cell){
   if(nome){td.classList.add('td-booked');if(sport!=='padel')td.classList.add('sport-'+sport);}
 }
 
-// ── TAB SWITCH ────────────────────────────────────────────────────────
+// ═══ NAV ═════════════════════════════════════════════════════════════
 function showCampo(campo){
   document.querySelectorAll('.campo-view').forEach(v=>v.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-btn,.bnav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('view-'+campo).classList.add('active');
   const tb=document.getElementById('tab-'+campo);if(tb)tb.classList.add('active');
   const bb=document.getElementById('bnav-'+campo);if(bb)bb.classList.add('active');
 }
 
-// ── SAVE ─────────────────────────────────────────────────────────────
+// ═══ SAVE / LOAD ═════════════════════════════════════════════════════
 async function saveAll(){
   const key=currentWeekKey();
   if(!key){showToast('⚠️ Inserisci la data di inizio settimana','error');return;}
@@ -826,22 +976,20 @@ async function saveAll(){
     const payload={id:key,date_from:document.getElementById('date-from').value.trim(),date_to:document.getElementById('date-to').value,responsabile:document.getElementById('responsabile').value,campo_slots:campoSlots,slots:{}};
     document.querySelectorAll('.cell').forEach(cell=>{
       const k=`${cell.dataset.campo}||${cell.dataset.slot}||${cell.dataset.day}`;
-      const entry={};FIELDS.forEach(f=>{entry[f]=cell.querySelector('.fi-'+f)?.value||'';});
-      if(FIELDS.some(f=>entry[f]))payload.slots[k]=entry;
+      const e={};FIELDS.forEach(f=>{e[f]=cell.querySelector('.fi-'+f)?.value||'';});
+      if(FIELDS.some(f=>e[f]))payload.slots[k]=e;
     });
     await dbSave(payload);
     bar.className='status-pill saved';bar.textContent='✓ Salvato';
     const now=new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
     document.getElementById('sync-info').textContent='☁️ '+now;
-    showToast('✅ Sincronizzato!','success');
+    showToast('✅ Salvato e sincronizzato!','success');
     setTimeout(()=>{bar.className='status-pill idle';bar.textContent='Pronto';},3000);
   }catch(e){
     bar.className='status-pill error';bar.textContent='Errore!';
     showToast('❌ '+e.message,'error');
   }finally{btn.disabled=false;}
 }
-
-// ── LOAD ──────────────────────────────────────────────────────────────
 async function loadWeekData(key){
   if(!key)return false;
   try{
@@ -862,25 +1010,25 @@ async function loadWeekData(key){
   }catch(e){console.error(e);showToast('❌ Errore caricamento','error');return false;}
 }
 
-// ── CLEAR ─────────────────────────────────────────────────────────────
+// ═══ CLEAR ═══════════════════════════════════════════════════════════
 function clearInputs(){
   document.querySelectorAll('.fi').forEach(i=>i.value='');
   document.querySelectorAll('td.td-booked').forEach(td=>td.classList.remove('td-booked','sport-tennis','sport-calcio'));
   updateCounters();
 }
 function clearAllConfirm(){
-  if(!confirm('Svuotare tutti i dati?\n(Gli orari personalizzati vengono mantenuti.)'))return;
-  clearInputs();showToast('🗑 Foglio svuotato','info');
+  if(!confirm('Svuotare tutti i dati della settimana?\n(Gli slot orari vengono mantenuti.)'))return;
+  clearInputs();showToast('🗑️ Foglio svuotato','info');
 }
 
-// ── SWITCH SETTIMANA ──────────────────────────────────────────────────
+// ═══ WEEK SWITCH ═════════════════════════════════════════════════════
 async function switchToWeek(fromStr){
   CAMPI.forEach(c=>{campoSlots[c]=[...DEFAULT_SLOTS];});
   clearInputs();
   document.getElementById('date-from').value=fromStr;
   document.getElementById('sync-info').textContent='';
   const bar=document.getElementById('status-bar');
-  bar.className='status-pill loading';bar.textContent='⏳...';
+  bar.className='status-pill loading';bar.textContent='Caricamento...';
   const found=await loadWeekData(weekKey(fromStr));
   if(!found){
     renderAllCampi();
@@ -888,17 +1036,17 @@ async function switchToWeek(fromStr){
     refreshDateHeaders(from);syncWeekMeta(from);updateCounters();
   }
   bar.className='status-pill idle';bar.textContent='Pronto';
-  showToast(found?'📂 '+fromStr:'📋 Nuova: '+fromStr,found?'success':'info');
+  showToast(found?'📂 Settimana caricata':'📋 Nuova settimana: '+fromStr,found?'success':'info');
 }
 function goToCurrentWeek(){switchToWeek(fmtIT(getMondayOf(new Date())));}
 function navWeek(dir){
   const from=parseIT(document.getElementById('date-from').value.trim());
-  if(!from){showToast('⚠️ Inserisci una data','error');return;}
+  if(!from){showToast('⚠️ Seleziona prima una settimana','error');return;}
   const next=new Date(from);next.setDate(from.getDate()+dir*7);
   switchToWeek(fmtIT(next));
 }
 
-// ── COUNTERS ──────────────────────────────────────────────────────────
+// ═══ COUNTERS ════════════════════════════════════════════════════════
 function updateCounters(){
   const c={padel1:0,padel2:0,tennis1:0,tennis2:0,calcio:0};
   document.querySelectorAll('.cell').forEach(cell=>{
@@ -913,43 +1061,43 @@ function updateCounters(){
   document.getElementById('stat-calcio').textContent=`Calcio: ${c.calcio}`;
 }
 
-// ── TOAST ─────────────────────────────────────────────────────────────
+// ═══ TOAST ═══════════════════════════════════════════════════════════
 function showToast(msg,type='info'){
   const t=document.getElementById('toast');
   t.textContent=msg;t.className=`toast ${type} show`;
-  clearTimeout(t._tid);t._tid=setTimeout(()=>t.classList.remove('show'),3200);
+  clearTimeout(t._tid);t._tid=setTimeout(()=>t.classList.remove('show'),3400);
 }
 
-// ── INPUT HANDLERS ────────────────────────────────────────────────────
+// ═══ INPUT HANDLERS ══════════════════════════════════════════════════
 let _deb;
 document.getElementById('date-from').addEventListener('input',function(){
   clearTimeout(_deb);
   _deb=setTimeout(()=>{
     const val=this.value.trim();
     if(val.length===10&&parseIT(val))switchToWeek(val);
-    else{const from=parseIT(val);syncWeekMeta(from||null);refreshDateHeaders(from||null);}
+    else{const f=parseIT(val);syncWeekMeta(f||null);refreshDateHeaders(f||null);}
   },600);
 });
 document.getElementById('responsabile').addEventListener('input',()=>{
   syncWeekMeta(parseIT(document.getElementById('date-from').value.trim())||null);
 });
 
-// ── AUTO-SAVE ─────────────────────────────────────────────────────────
+// ═══ AUTO-SAVE (ogni minuto) ══════════════════════════════════════════
 setInterval(()=>{
   const key=currentWeekKey();if(!key)return;
   if([...document.querySelectorAll('.fi-nome')].some(i=>i.value.trim()))saveAll();
 },60000);
 
-// ── SWIPE to navigate weeks (mobile) ─────────────────────────────────
+// ═══ SWIPE (mobile) ══════════════════════════════════════════════════
 let _tx=0;
 document.querySelector('.main').addEventListener('touchstart',e=>{_tx=e.touches[0].clientX;},{passive:true});
 document.querySelector('.main').addEventListener('touchend',e=>{
   if(!isMobile())return;
   const dx=e.changedTouches[0].clientX-_tx;
-  if(Math.abs(dx)>70)navWeek(dx<0?1:-1);
+  if(Math.abs(dx)>72)navWeek(dx<0?1:-1);
 },{passive:true});
 
-// ── INIT ──────────────────────────────────────────────────────────────
+// ═══ INIT ════════════════════════════════════════════════════════════
 buildViews();
 updateCounters();
 goToCurrentWeek();
