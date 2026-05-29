@@ -97,6 +97,7 @@ td.td-booked .cell-booked-tag{display:inline-block}
 .fi:focus{border-bottom-width:2px;border-bottom-color:#1a3a5c}
 .fi.c-tennis:focus{border-bottom-color:#2d7d32}
 .fi.c-calcio:focus{border-bottom-color:#c84b00}
+.fi-importo{width:90px}
 
 /* FOOTER */
 .footer{display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(26,58,92,.1);padding-top:12px;margin-top:18px;font-size:10px;color:#aaa;letter-spacing:.05em;flex-wrap:wrap;gap:8px}
@@ -180,22 +181,19 @@ td.td-booked .cell-booked-tag{display:inline-block}
   </div>
 </div>
 
-</div><!-- .page -->
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
-// ── CONFIG ──────────────────────────────────────────────────────────────────
 const CAMPI   = ['padel1','padel2','tennis1','tennis2','calcio'];
 const SPORT   = {padel1:'padel',padel2:'padel',tennis1:'tennis',tennis2:'tennis',calcio:'calcio'};
-const EMOJI   = {padel1:'🎾',padel2:'🎾',tennis1:'🎾',tennis2:'🎾',calcio:'⚽'};
 const SLOTS   = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00'];
 const SLOT_END = s => { const h=parseInt(s)+1; return (h<10?'0':'')+h+':00'; };
 const DAYS    = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'];
 const WEEKEND = [5,6];
-const FIELDS  = ['nome','tel','istr','attr']; // nome, telefono, istruttore, attrezzatura
-const F_LABEL = {nome:'Nome',tel:'Telefono',istr:'Istruttore',attr:'Attrezzatura'};
+const FIELDS  = ['nome','tel','istr','importo'];
+const F_LABEL = {nome:'Nome',tel:'Telefono',istr:'Istruttore',importo:'Importo Lezione'};
 
-// ── BUILD TABLES ─────────────────────────────────────────────────────────────
 function buildTables() {
   const container = document.getElementById('views-container');
   CAMPI.forEach((campo, ci) => {
@@ -205,50 +203,27 @@ function buildTables() {
     div.className = 'campo-view' + (ci === 0 ? ' active' : '');
     div.id = 'view-' + campo;
 
-    // thead
     let html = `<table><thead><tr><th class="th-time">Orario</th>`;
     DAYS.forEach((d, i) => {
       const wk = WEEKEND.includes(i) ? ' th-weekend' : '';
-      html += `<th class="th-day${wk}">
-        <div class="day-header">
-          <span class="day-name">${d}</span>
-          <span class="day-date" data-day-offset="${i}" data-campo="${campo}">—</span>
-        </div>
-      </th>`;
+      html += `<th class="th-day${wk}"><div class="day-header"><span class="day-name">${d}</span><span class="day-date" data-day-offset="${i}">—</span></div></th>`;
     });
     html += `</tr></thead><tbody>`;
 
-    // tbody
     SLOTS.forEach(slot => {
-      html += `<tr>
-        <td class="td-time">
-          <span class="slot-time">${slot}</span>
-          <span class="slot-end">↓ ${SLOT_END(slot)}</span>
-        </td>`;
+      html += `<tr><td class="td-time"><span class="slot-time">${slot}</span><span class="slot-end">↓ ${SLOT_END(slot)}</span></td>`;
       DAYS.forEach((d, di) => {
         const wkc = WEEKEND.includes(di) ? ' td-weekend' : '';
         html += `<td class="${wkc}" id="td-${campo}-${slot.replace(':','')}-${di}">
           <div class="cell" data-campo="${campo}" data-slot="${slot}" data-day="${di}">
             <span class="cell-booked-tag">Prenotato</span>
             <div class="cell-row">
-              <div class="field">
-                <span class="fl">${F_LABEL.nome}</span>
-                <input class="fi ${cc} fi-nome" type="text" placeholder="—" autocomplete="off" data-f="nome">
-              </div>
-              <div class="field">
-                <span class="fl">${F_LABEL.tel}</span>
-                <input class="fi ${cc} fi-tel" type="tel" placeholder="—" autocomplete="off" data-f="tel">
-              </div>
+              <div class="field"><span class="fl">${F_LABEL.nome}</span><input class="fi ${cc} fi-nome" type="text" placeholder="—" autocomplete="off"></div>
+              <div class="field"><span class="fl">${F_LABEL.tel}</span><input class="fi ${cc} fi-tel" type="tel" placeholder="—" autocomplete="off"></div>
             </div>
             <div class="cell-row">
-              <div class="field">
-                <span class="fl">${F_LABEL.istr}</span>
-                <input class="fi ${cc} fi-istr" type="text" placeholder="—" autocomplete="off" data-f="istr">
-              </div>
-              <div class="field">
-                <span class="fl">${F_LABEL.attr}</span>
-                <input class="fi ${cc} fi-attr" type="text" placeholder="—" autocomplete="off" data-f="attr">
-              </div>
+              <div class="field"><span class="fl">${F_LABEL.istr}</span><input class="fi ${cc} fi-istr" type="text" placeholder="—" autocomplete="off"></div>
+              <div class="field"><span class="fl">${F_LABEL.importo}</span><input class="fi ${cc} fi-importo" type="text" placeholder="€ 0" autocomplete="off"></div>
             </div>
           </div>
         </td>`;
@@ -260,17 +235,14 @@ function buildTables() {
     container.appendChild(div);
   });
 
-  // Event listeners su tutti gli input
   document.querySelectorAll('.fi').forEach(inp => {
     inp.addEventListener('input', () => {
-      const cell = inp.closest('.cell');
-      refreshCellState(cell);
+      refreshCellState(inp.closest('.cell'));
       updateCounters();
     });
   });
 }
 
-// ── TAB SWITCH ───────────────────────────────────────────────────────────────
 function showCampo(campo) {
   document.querySelectorAll('.campo-view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -278,13 +250,11 @@ function showCampo(campo) {
   document.getElementById('tab-' + campo).classList.add('active');
 }
 
-// ── CELL STATE (colore + badge) ──────────────────────────────────────────────
 function refreshCellState(cell) {
   if (!cell) return;
   const td = cell.closest('td');
   if (!td) return;
-  const campo = cell.dataset.campo;
-  const sport = SPORT[campo];
+  const sport = SPORT[cell.dataset.campo];
   const nome = cell.querySelector('.fi-nome')?.value?.trim();
   td.classList.remove('td-booked','sport-tennis','sport-calcio');
   if (nome) {
@@ -293,54 +263,33 @@ function refreshCellState(cell) {
   }
 }
 
-// ── DATE LOGIC ────────────────────────────────────────────────────────────────
 function parseIT(str) {
   const p = str.split('/');
   if (p.length !== 3) return null;
   const dt = new Date(parseInt(p[2]), parseInt(p[1])-1, parseInt(p[0]));
   return isNaN(dt) ? null : dt;
 }
-function fmtIT(dt) {
-  return dt.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'});
-}
-function fmtShort(dt) {
-  return dt.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit'});
-}
+function fmtIT(dt) { return dt.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'}); }
+function fmtShort(dt) { return dt.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit'}); }
 function getMondayOfWeek(d) {
-  const dt = new Date(d);
-  const day = dt.getDay();
-  const diff = (day === 0) ? -6 : 1 - day;
-  dt.setDate(dt.getDate() + diff);
-  dt.setHours(0,0,0,0);
-  return dt;
+  const dt = new Date(d); const day = dt.getDay();
+  dt.setDate(dt.getDate() + ((day === 0) ? -6 : 1 - day));
+  dt.setHours(0,0,0,0); return dt;
 }
-function todayMidnight() {
-  const d = new Date();
-  d.setHours(0,0,0,0);
-  return d;
-}
+function todayMidnight() { const d = new Date(); d.setHours(0,0,0,0); return d; }
 
 function updateHeaderDates() {
   const fromStr = document.getElementById('date-from').value.trim();
   const from = parseIT(fromStr);
   const today = todayMidnight();
-
   document.querySelectorAll('[data-day-offset]').forEach(el => {
     if (!from) { el.textContent = '—'; el.classList.remove('today'); return; }
-    const offset = parseInt(el.dataset.dayOffset);
-    const d = new Date(from);
-    d.setDate(from.getDate() + offset);
+    const d = new Date(from); d.setDate(from.getDate() + parseInt(el.dataset.dayOffset));
     el.textContent = fmtShort(d);
-    if (d.getTime() === today.getTime()) {
-      el.classList.add('today');
-    } else {
-      el.classList.remove('today');
-    }
+    el.classList.toggle('today', d.getTime() === today.getTime());
   });
-
   if (from) {
-    const sun = new Date(from);
-    sun.setDate(from.getDate() + 6);
+    const sun = new Date(from); sun.setDate(from.getDate() + 6);
     document.getElementById('date-to').value = fmtIT(sun);
     document.getElementById('footer-info').textContent =
       `Settimana ${fmtIT(from)} – ${fmtIT(sun)} · Responsabile: ${document.getElementById('responsabile').value || '—'}`;
@@ -350,25 +299,15 @@ function updateHeaderDates() {
   }
 }
 
-// ── WEEK KEY ──────────────────────────────────────────────────────────────────
-function weekKey(fromStr) {
-  if (!fromStr) return null;
-  return 'rc_' + fromStr.replace(/\//g,'_');
-}
-function currentWeekKey() {
-  return weekKey(document.getElementById('date-from').value.trim());
-}
+function weekKey(fromStr) { return fromStr ? 'rc_' + fromStr.replace(/\//g,'_') : null; }
+function currentWeekKey() { return weekKey(document.getElementById('date-from').value.trim()); }
 
-// ── SAVE ──────────────────────────────────────────────────────────────────────
 function saveAll() {
   const key = currentWeekKey();
   if (!key) { showToast('⚠️ Inserisci prima la data di inizio settimana', 'error'); return; }
-
   const btn = document.getElementById('btn-save');
   const bar = document.getElementById('status-bar');
-  btn.disabled = true;
-  bar.className = 'status saving'; bar.textContent = 'Salvataggio...';
-
+  btn.disabled = true; bar.className = 'status saving'; bar.textContent = 'Salvataggio...';
   try {
     const data = {
       meta: {
@@ -379,36 +318,26 @@ function saveAll() {
       },
       slots: {}
     };
-
     document.querySelectorAll('.cell').forEach(cell => {
       const k = `${cell.dataset.campo}||${cell.dataset.slot}||${cell.dataset.day}`;
       const entry = {};
-      FIELDS.forEach(f => {
-        entry[f] = cell.querySelector(`.fi-${f}`)?.value || '';
-      });
+      FIELDS.forEach(f => { entry[f] = cell.querySelector(`.fi-${f}`)?.value || ''; });
       if (FIELDS.some(f => entry[f])) data.slots[k] = entry;
     });
-
     localStorage.setItem(key, JSON.stringify(data));
-
-    // Aggiorna indice
     let idx = JSON.parse(localStorage.getItem('rc_index') || '[]');
-    if (!idx.includes(key)) { idx.unshift(key); if (idx.length > 104) idx.pop(); }
-    else { idx = [key, ...idx.filter(k2 => k2 !== key)]; } // porta in cima
+    idx = [key, ...idx.filter(k2 => k2 !== key)];
+    if (idx.length > 104) idx.pop();
     localStorage.setItem('rc_index', JSON.stringify(idx));
-
     bar.className = 'status saved'; bar.textContent = '✓ Salvato';
     showToast('✅ Settimana salvata!', 'success');
     setTimeout(() => { bar.className = 'status idle'; bar.textContent = 'Pronto'; }, 3000);
   } catch(e) {
     bar.className = 'status error'; bar.textContent = 'Errore!';
-    showToast('❌ Errore salvataggio: ' + e.message, 'error');
-  } finally {
-    btn.disabled = false;
-  }
+    showToast('❌ Errore: ' + e.message, 'error');
+  } finally { btn.disabled = false; }
 }
 
-// ── LOAD WEEK DATA ────────────────────────────────────────────────────────────
 function loadWeekData(key) {
   if (!key) return false;
   const raw = localStorage.getItem(key);
@@ -425,133 +354,82 @@ function loadWeekData(key) {
         const [campo, slot, day] = k.split('||');
         const cell = document.querySelector(`.cell[data-campo="${campo}"][data-slot="${slot}"][data-day="${day}"]`);
         if (!cell) return;
-        FIELDS.forEach(f => {
-          const inp = cell.querySelector(`.fi-${f}`);
-          if (inp) inp.value = v[f] || '';
-        });
+        FIELDS.forEach(f => { const inp = cell.querySelector(`.fi-${f}`); if (inp) inp.value = v[f] || ''; });
         refreshCellState(cell);
       });
     }
-    updateCounters();
-    return true;
-  } catch(e) {
-    console.error('Errore caricamento:', e);
-    return false;
-  }
+    updateCounters(); return true;
+  } catch(e) { console.error(e); return false; }
 }
 
-// ── CLEAR ALL ─────────────────────────────────────────────────────────────────
 function clearInputs() {
   document.querySelectorAll('.fi').forEach(inp => inp.value = '');
-  document.querySelectorAll('td.td-booked').forEach(td => {
-    td.classList.remove('td-booked','sport-tennis','sport-calcio');
-  });
+  document.querySelectorAll('td.td-booked').forEach(td => td.classList.remove('td-booked','sport-tennis','sport-calcio'));
   updateCounters();
 }
-
 function clearAllConfirm() {
-  if (!confirm('Svuotare tutti i dati della settimana visualizzata?\n(I dati salvati in precedenza restano disponibili.)')) return;
-  clearInputs();
-  showToast('🗑 Foglio svuotato', 'info');
+  if (!confirm('Svuotare tutti i dati della settimana visualizzata?\n(I dati salvati restano disponibili.)')) return;
+  clearInputs(); showToast('🗑 Foglio svuotato', 'info');
 }
 
-// ── SWITCH SETTIMANA (svuota + carica) ───────────────────────────────────────
 function switchToWeek(fromStr) {
   clearInputs();
   document.getElementById('date-from').value = fromStr;
   updateHeaderDates();
-  const key = weekKey(fromStr);
-  const found = loadWeekData(key);
-  if (found) {
-    showToast('📂 Dati caricati per ' + fromStr, 'success');
-  } else {
-    showToast('📋 Nuova settimana: ' + fromStr, 'info');
-  }
+  const found = loadWeekData(weekKey(fromStr));
+  showToast(found ? '📂 Dati caricati per ' + fromStr : '📋 Nuova settimana: ' + fromStr, found ? 'success' : 'info');
 }
 
-// ── QUESTA SETTIMANA ──────────────────────────────────────────────────────────
 function goToCurrentWeek() {
-  const monday = getMondayOfWeek(new Date());
-  switchToWeek(fmtIT(monday));
+  switchToWeek(fmtIT(getMondayOfWeek(new Date())));
 }
 
-// ── SETTIMANA PRECEDENTE ──────────────────────────────────────────────────────
 function loadPrevWeek() {
   const fromStr = document.getElementById('date-from').value.trim();
   if (fromStr) {
     const from = parseIT(fromStr);
-    if (from) {
-      const prev = new Date(from);
-      prev.setDate(from.getDate() - 7);
-      switchToWeek(fmtIT(prev));
-      return;
-    }
+    if (from) { const prev = new Date(from); prev.setDate(from.getDate() - 7); switchToWeek(fmtIT(prev)); return; }
   }
-  // Se nessuna settimana selezionata, carica l'ultima salvata
   const idx = JSON.parse(localStorage.getItem('rc_index') || '[]');
-  if (idx.length > 0) {
-    clearInputs();
-    loadWeekData(idx[0]);
-    showToast('📂 Ultima settimana caricata', 'success');
-  } else {
-    showToast('ℹ️ Nessuna settimana salvata', 'info');
-  }
+  if (idx.length > 0) { clearInputs(); loadWeekData(idx[0]); showToast('📂 Ultima settimana caricata', 'success'); }
+  else showToast('ℹ️ Nessuna settimana salvata', 'info');
 }
 
-// ── COUNTERS ──────────────────────────────────────────────────────────────────
 function updateCounters() {
   const counts = {padel1:0,padel2:0,tennis1:0,tennis2:0,calcio:0};
   document.querySelectorAll('.cell').forEach(cell => {
-    const nome = cell.querySelector('.fi-nome')?.value?.trim();
-    if (nome) counts[cell.dataset.campo]++;
+    if (cell.querySelector('.fi-nome')?.value?.trim()) counts[cell.dataset.campo]++;
   });
-  CAMPI.forEach(c => {
-    const el = document.getElementById('cnt-' + c);
-    if (el) el.textContent = counts[c] || '0';
-  });
-  document.getElementById('stat-padel').textContent  = `Padel: ${counts.padel1 + counts.padel2}`;
-  document.getElementById('stat-tennis').textContent = `Tennis: ${counts.tennis1 + counts.tennis2}`;
+  CAMPI.forEach(c => { const el = document.getElementById('cnt-'+c); if(el) el.textContent = counts[c]||'0'; });
+  document.getElementById('stat-padel').textContent  = `Padel: ${counts.padel1+counts.padel2}`;
+  document.getElementById('stat-tennis').textContent = `Tennis: ${counts.tennis1+counts.tennis2}`;
   document.getElementById('stat-calcio').textContent = `Calcio: ${counts.calcio}`;
 }
 
-// ── TOAST ─────────────────────────────────────────────────────────────────────
-function showToast(msg, type = 'info') {
+function showToast(msg, type='info') {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = `toast ${type} show`;
-  clearTimeout(t._tid);
-  t._tid = setTimeout(() => t.classList.remove('show'), 3500);
+  t.textContent = msg; t.className = `toast ${type} show`;
+  clearTimeout(t._tid); t._tid = setTimeout(() => t.classList.remove('show'), 3500);
 }
 
-// ── AUTO-SAVE (60s) ───────────────────────────────────────────────────────────
 setInterval(() => {
-  const key = currentWeekKey();
-  if (!key) return;
-  const hasData = [...document.querySelectorAll('.fi-nome')].some(i => i.value.trim());
-  if (hasData) saveAll();
+  const key = currentWeekKey(); if (!key) return;
+  if ([...document.querySelectorAll('.fi-nome')].some(i => i.value.trim())) saveAll();
 }, 60000);
 
-// ── DATE-FROM CHANGE → switch settimana ──────────────────────────────────────
-let _debounce;
+let _deb;
 document.getElementById('date-from').addEventListener('input', function() {
-  clearTimeout(_debounce);
-  _debounce = setTimeout(() => {
+  clearTimeout(_deb);
+  _deb = setTimeout(() => {
     const val = this.value.trim();
-    if (val.length === 10 && parseIT(val)) {
-      switchToWeek(val);
-    } else {
-      updateHeaderDates();
-    }
+    if (val.length === 10 && parseIT(val)) switchToWeek(val);
+    else updateHeaderDates();
   }, 600);
 });
-
-// ── RESPONSABILE ──────────────────────────────────────────────────────────────
 document.getElementById('responsabile').addEventListener('input', updateHeaderDates);
 
-// ── INIT ──────────────────────────────────────────────────────────────────────
 buildTables();
 updateCounters();
-// Carica automaticamente la settimana corrente all'apertura
 goToCurrentWeek();
 </script>
 </body>
