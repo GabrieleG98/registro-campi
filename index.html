@@ -11,9 +11,6 @@
 <title>ALMAR – Prenotazioni Campi</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════════════════════
-   TOKENS
-═══════════════════════════════════════════════════════════ */
 :root{
   --navy:   #0f2540;
   --navy2:  #1a3a5c;
@@ -31,10 +28,6 @@
   --r:      12px;
   --r-sm:   8px;
 }
-
-/* ═══════════════════════════════════════════════════════════
-   RESET
-═══════════════════════════════════════════════════════════ */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;}
 body{
@@ -44,20 +37,12 @@ body{
   overflow-x:hidden;
   color:var(--navy);
 }
-
-/* ═══════════════════════════════════════════════════════════
-   APP SHELL
-═══════════════════════════════════════════════════════════ */
 .app{
   display:flex;flex-direction:column;
   min-height:100dvh;
   max-width:1900px;
   margin:0 auto;
 }
-
-/* ═══════════════════════════════════════════════════════════
-   TOP BAR
-═══════════════════════════════════════════════════════════ */
 .topbar{
   background:var(--navy);
   color:#fff;
@@ -79,7 +64,6 @@ body{
   color:rgba(255,255,255,.45);
 }
 .topbar-actions{display:flex;gap:7px;align-items:center;flex-shrink:0}
-
 .status-pill{
   font-size:10px;font-weight:700;padding:4px 11px;border-radius:20px;
   white-space:nowrap;letter-spacing:.03em;
@@ -89,7 +73,6 @@ body{
 .status-pill.saved{background:#d1fae5;color:#065f46}
 .status-pill.error{background:#fee2e2;color:#991b1b}
 .status-pill.loading{background:rgba(255,255,255,.14);color:rgba(255,255,255,.8)}
-
 .icon-btn{
   width:38px;height:38px;border:none;border-radius:var(--r-sm);
   background:rgba(255,255,255,.1);color:#fff;
@@ -102,10 +85,6 @@ body{
 .icon-btn.gold:hover{background:var(--gold2)}
 .icon-btn.red{background:rgba(239,68,68,.25)}
 .icon-btn.red:hover{background:rgba(239,68,68,.5)}
-
-/* ═══════════════════════════════════════════════════════════
-   WEEK BAR
-═══════════════════════════════════════════════════════════ */
 .weekbar{
   background:var(--surface);
   border-bottom:2px solid var(--border);
@@ -148,10 +127,6 @@ body{
 .ctrl-input:focus{border-bottom-color:var(--navy)}
 .ctrl-input[readonly]{color:#9ca3af;border-bottom-style:dashed}
 .sync-badge{font-size:9px;color:#9ca3af;white-space:nowrap}
-
-/* ═══════════════════════════════════════════════════════════
-   TABS
-═══════════════════════════════════════════════════════════ */
 .tabs-wrap{
   background:var(--surface);
   padding:0 20px;
@@ -160,7 +135,6 @@ body{
 }
 .tabs-wrap::-webkit-scrollbar{display:none}
 .tabs{display:flex;gap:2px;min-width:max-content}
-
 .tab-btn{
   padding:12px 18px;
   border:none;border-bottom:3px solid transparent;
@@ -177,7 +151,6 @@ body{
 .tab-btn.padel.active{color:var(--navy2);border-bottom-color:var(--navy2);background:rgba(26,58,92,.04)}
 .tab-btn.tennis.active{color:var(--green);border-bottom-color:var(--green);background:rgba(30,107,46,.04)}
 .tab-btn.calcio.active{color:var(--orange);border-bottom-color:var(--orange);background:rgba(181,58,0,.04)}
-
 .badge{
   font-size:10px;font-weight:800;padding:2px 7px;
   border-radius:12px;min-width:22px;text-align:center;
@@ -186,16 +159,8 @@ body{
 .tennis .badge{background:rgba(30,107,46,.1);color:var(--green)}
 .calcio .badge{background:rgba(181,58,0,.1);color:var(--orange)}
 .tab-btn:not(.active) .badge{background:rgba(0,0,0,.06);color:#94a3b8}
-
-/* ═══════════════════════════════════════════════════════════
-   MAIN
-═══════════════════════════════════════════════════════════ */
 .main{flex:1;padding:18px 20px;overflow:hidden}
 .campo-view{display:none}.campo-view.active{display:block}
-
-/* ═══════════════════════════════════════════════════════════
-   ADD SLOT BAR
-═══════════════════════════════════════════════════════════ */
 .add-slot-bar{
   display:flex;align-items:center;gap:10px;
   padding:10px 16px;background:var(--surface);
@@ -223,10 +188,6 @@ body{
   letter-spacing:.04em;
 }
 .btn-add-slot:hover{background:#0a1c30;transform:translateY(-1px)}
-
-/* ═══════════════════════════════════════════════════════════
-   TABLE
-═══════════════════════════════════════════════════════════ */
 .table-wrap{
   overflow-x:auto;
   -webkit-overflow-scrolling:touch;
@@ -239,8 +200,6 @@ table{
   width:100%;border-collapse:collapse;
   table-layout:fixed;min-width:720px;
 }
-
-/* ── HEADER ── */
 thead th{
   padding:0;text-align:center;
   border-bottom:2px solid var(--border);
@@ -285,8 +244,6 @@ thead th.th-weekend{background:#faf5ec}
 }
 .th-weekend .day-name{color:#c4a35a}
 .th-weekend .day-date{background:rgba(201,168,76,.1);color:#7a6030}
-
-/* ── ROWS ── */
 tbody tr{
   border-bottom:1.5px solid var(--border);
   transition:background .1s;
@@ -299,8 +256,6 @@ tbody td{
   transition:background .15s;
 }
 tbody td:last-child{border-right:none}
-
-/* ── TIME COLUMN ── */
 tbody td.td-time{
   background:linear-gradient(180deg,#1e3f6a 0%,#152d4d 100%);
   border-right:2px solid rgba(255,255,255,.08);
@@ -326,14 +281,10 @@ tbody td.td-time{
   transition:all .15s;display:block;width:calc(100% - 8px);margin-left:4px;
 }
 .btn-del-slot:hover{background:rgba(239,68,68,.3);color:#fca5a5}
-
-/* ── ZEBRA & WEEKEND ── */
 tbody tr:nth-child(odd) td:not(.td-time){background:var(--surface)}
 tbody tr:nth-child(even) td:not(.td-time){background:var(--surface2)}
 tbody td.td-weekend{background:#fdf9f0!important}
 tbody tr:nth-child(even) td.td-weekend{background:#f9f3e4!important}
-
-/* ── BOOKED CELL ── */
 tbody td.td-booked{
   background:rgba(26,58,92,.06)!important;
   border-left:4px solid var(--navy2)!important;
@@ -346,15 +297,11 @@ tbody td.td-booked.sport-calcio{
   background:rgba(181,58,0,.06)!important;
   border-left-color:var(--orange)!important;
 }
-
-/* ── CELL CONTENT ── */
 .cell{
   padding:8px 9px;height:100%;
   display:flex;flex-direction:column;gap:5px;
   cursor:default;
 }
-
-/* booked badge */
 .cell-booked-tag{
   display:none;
   font-size:8px;font-weight:800;letter-spacing:.1em;
@@ -367,13 +314,11 @@ tbody td.td-booked.sport-calcio{
 .sport-calcio .cell-booked-tag{background:var(--orange)}
 td.td-booked .cell-booked-tag{display:inline-flex;align-items:center;gap:4px}
 td.td-booked .cell-booked-tag::before{content:"●";font-size:6px}
-
 .cell-row{
   display:grid;grid-template-columns:1fr 1fr;gap:6px;
   flex:1;
 }
 .field{display:flex;flex-direction:column;gap:2px;min-width:0}
-
 .fl{
   font-size:8px;letter-spacing:.12em;text-transform:uppercase;
   color:#b0b8c4;font-weight:700;
@@ -396,15 +341,9 @@ td.td-booked .cell-booked-tag::before{content:"●";font-size:6px}
 .fi.c-tennis:focus{border-bottom-color:var(--green);background:rgba(30,107,46,.03)}
 .fi.c-calcio{border-bottom-color:rgba(181,58,0,.2)}
 .fi.c-calcio:focus{border-bottom-color:var(--orange);background:rgba(181,58,0,.03)}
-
-/* ── HOVER effect on empty cell ── */
 tbody td:not(.td-booked):not(.td-time):hover{
   background:rgba(15,37,64,.03)!important;
 }
-
-/* ═══════════════════════════════════════════════════════════
-   FOOTER
-═══════════════════════════════════════════════════════════ */
 .footer{
   background:var(--surface);
   border-top:2px solid var(--border);
@@ -425,10 +364,6 @@ tbody td:not(.td-booked):not(.td-time):hover{
 .stat.tennis::before{background:var(--green)}
 .stat.calcio{background:rgba(181,58,0,.08);color:var(--orange)}
 .stat.calcio::before{background:var(--orange)}
-
-/* ═══════════════════════════════════════════════════════════
-   BOTTOM NAV (mobile)
-═══════════════════════════════════════════════════════════ */
 .bottom-nav{
   display:none;
   position:fixed;bottom:0;left:0;right:0;
@@ -459,10 +394,6 @@ tbody td:not(.td-booked):not(.td-time):hover{
   border-radius:10px;background:rgba(0,0,0,.07);
   color:inherit;
 }
-
-/* ═══════════════════════════════════════════════════════════
-   TOAST
-═══════════════════════════════════════════════════════════ */
 .toast{
   position:fixed;
   bottom:max(24px,calc(env(safe-area-inset-bottom)+72px));
@@ -478,10 +409,6 @@ tbody td:not(.td-booked):not(.td-time):hover{
 .toast.success{background:#d1fae5;color:#065f46;border:1px solid #6ee7b7}
 .toast.info{background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe}
 .toast.error{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5}
-
-/* ═══════════════════════════════════════════════════════════
-   MODAL (mobile bottom sheet)
-═══════════════════════════════════════════════════════════ */
 .modal-overlay{
   display:none;position:fixed;inset:0;
   background:rgba(0,0,0,.5);z-index:500;
@@ -541,12 +468,6 @@ tbody td:not(.td-booked):not(.td-time):hover{
 .modal-btn.secondary:hover{background:#e2e8f0}
 .modal-btn.clear{background:#fee2e2;color:#991b1b}
 .modal-btn.clear:hover{background:#fecaca}
-
-/* ═══════════════════════════════════════════════════════════
-   RESPONSIVE BREAKPOINTS
-═══════════════════════════════════════════════════════════ */
-
-/* TABLET ≥768 */
 @media(min-width:768px){
   .topbar{padding:16px 28px;padding-top:max(16px,env(safe-area-inset-top))}
   .topbar-title{font-size:26px}
@@ -556,8 +477,6 @@ tbody td:not(.td-booked):not(.td-time):hover{
   .footer{padding:13px 28px}
   tbody td{height:132px}
 }
-
-/* DESKTOP ≥1100 */
 @media(min-width:1100px){
   body{
     display:flex;align-items:flex-start;
@@ -575,8 +494,6 @@ tbody td:not(.td-booked):not(.td-time):hover{
   tbody td{height:138px}
   .slot-label{font-size:24px}
 }
-
-/* MOBILE ≤639 */
 @media(max-width:639px){
   .topbar-sub{display:none}
   .bottom-nav{display:block}
@@ -595,8 +512,6 @@ tbody td:not(.td-booked):not(.td-time):hover{
   .ctrl-group:nth-child(2){display:none}
   .ctrl-input{width:95px}
 }
-
-/* PRINT */
 @media print{
   .topbar,.weekbar,.tabs-wrap,.footer,.add-slot-bar,
   .btn-del-slot,.bottom-nav,.modal-overlay,.toast{display:none!important}
@@ -604,20 +519,17 @@ tbody td:not(.td-booked):not(.td-time):hover{
   body,html,.app{background:#fff;box-shadow:none}
   .table-wrap{box-shadow:none;border-radius:0;border:1px solid #ddd}
   tbody td{height:90px}
-  .topbar{display:none}
 }
 </style>
 </head>
 <body>
 <div class="app">
-
-<!-- ═══ TOP BAR ═══ -->
 <header class="topbar">
   <div class="topbar-brand" style="display:flex;align-items:center;gap:14px">
-    <img src="LOGO_PLACEHOLDER" alt="Almar Logo" style="height:42px;width:42px;border-radius:9px;object-fit:cover;flex-shrink:0;box-shadow:0 2px 10px rgba(0,0,0,.30)">
+    <img src="REAL_BASE64_HERE" alt="Almar" style="height:44px;width:44px;border-radius:10px;object-fit:cover;flex-shrink:0;box-shadow:0 2px 12px rgba(0,0,0,.35);background:#fff;">
     <div>
-      <div class="topbar-title" style="font-size:20px;letter-spacing:.18em">ALMAR</div>
-      <div class="topbar-sub" style="display:block!important;letter-spacing:.16em">TIMI AMA VILLASIMIUS &nbsp;·&nbsp; Padel · Tennis · Calcio</div>
+      <div class="topbar-title" style="font-size:21px;letter-spacing:.2em">ALMAR</div>
+      <div class="topbar-sub" style="display:block!important;letter-spacing:.14em">TIMI AMA VILLASIMIUS &nbsp;·&nbsp; Padel · Tennis · Calcio</div>
     </div>
   </div>
   <div class="topbar-actions">
@@ -627,14 +539,12 @@ tbody td:not(.td-booked):not(.td-time):hover{
     <button class="icon-btn gold" onclick="saveAll()" id="btn-save" title="Salva">💾</button>
   </div>
 </header>
-
-<!-- ═══ WEEK BAR ═══ -->
 <div class="weekbar">
   <div class="week-nav-group">
-    <button class="week-btn" onclick="navWeek(-1)" title="Settimana prec.">&#8592;</button>
+    <button class="week-btn" onclick="navWeek(-1)">&#8592;</button>
     <button class="week-btn today-btn" onclick="goToCurrentWeek()">OGGI</button>
     <span class="week-range" id="week-range">—</span>
-    <button class="week-btn" onclick="navWeek(1)" title="Settimana succ.">&#8594;</button>
+    <button class="week-btn" onclick="navWeek(1)">&#8594;</button>
   </div>
   <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
     <div class="ctrl-group">
@@ -652,8 +562,6 @@ tbody td:not(.td-booked):not(.td-time):hover{
   </div>
   <span class="sync-badge" id="sync-info"></span>
 </div>
-
-<!-- ═══ TABS ═══ -->
 <div class="tabs-wrap">
   <div class="tabs">
     <button class="tab-btn padel active" id="tab-padel1" onclick="showCampo('padel1')">🎾 Padel 1 <span class="badge" id="cnt-padel1">0</span></button>
@@ -663,13 +571,9 @@ tbody td:not(.td-booked):not(.td-time):hover{
     <button class="tab-btn calcio" id="tab-calcio" onclick="showCampo('calcio')">⚽ Calcio <span class="badge" id="cnt-calcio">0</span></button>
   </div>
 </div>
-
-<!-- ═══ MAIN ═══ -->
 <main class="main">
   <div id="views-container"></div>
 </main>
-
-<!-- ═══ FOOTER ═══ -->
 <footer class="footer">
   <span class="footer-left" id="footer-info">Nessuna settimana selezionata</span>
   <div class="footer-stats">
@@ -678,34 +582,15 @@ tbody td:not(.td-booked):not(.td-time):hover{
     <span class="stat calcio" id="stat-calcio">Calcio: 0</span>
   </div>
 </footer>
-
-<!-- ═══ BOTTOM NAV ═══ -->
 <nav class="bottom-nav">
   <div class="bottom-nav-inner">
-    <button class="bnav-btn padel active" id="bnav-padel1" onclick="showCampo('padel1')">
-      <span class="bnav-icon">🎾</span>Padel 1
-      <span class="bnav-badge" id="bcnt-padel1">0</span>
-    </button>
-    <button class="bnav-btn padel" id="bnav-padel2" onclick="showCampo('padel2')">
-      <span class="bnav-icon">🎾</span>Padel 2
-      <span class="bnav-badge" id="bcnt-padel2">0</span>
-    </button>
-    <button class="bnav-btn tennis" id="bnav-tennis1" onclick="showCampo('tennis1')">
-      <span class="bnav-icon">🎾</span>Tennis 1
-      <span class="bnav-badge" id="bcnt-tennis1">0</span>
-    </button>
-    <button class="bnav-btn tennis" id="bnav-tennis2" onclick="showCampo('tennis2')">
-      <span class="bnav-icon">🎾</span>Tennis 2
-      <span class="bnav-badge" id="bcnt-tennis2">0</span>
-    </button>
-    <button class="bnav-btn calcio" id="bnav-calcio" onclick="showCampo('calcio')">
-      <span class="bnav-icon">⚽</span>Calcio
-      <span class="bnav-badge" id="bcnt-calcio">0</span>
-    </button>
+    <button class="bnav-btn padel active" id="bnav-padel1" onclick="showCampo('padel1')"><span class="bnav-icon">🎾</span>Padel 1<span class="bnav-badge" id="bcnt-padel1">0</span></button>
+    <button class="bnav-btn padel" id="bnav-padel2" onclick="showCampo('padel2')"><span class="bnav-icon">🎾</span>Padel 2<span class="bnav-badge" id="bcnt-padel2">0</span></button>
+    <button class="bnav-btn tennis" id="bnav-tennis1" onclick="showCampo('tennis1')"><span class="bnav-icon">🎾</span>Tennis 1<span class="bnav-badge" id="bcnt-tennis1">0</span></button>
+    <button class="bnav-btn tennis" id="bnav-tennis2" onclick="showCampo('tennis2')"><span class="bnav-icon">🎾</span>Tennis 2<span class="bnav-badge" id="bcnt-tennis2">0</span></button>
+    <button class="bnav-btn calcio" id="bnav-calcio" onclick="showCampo('calcio')"><span class="bnav-icon">⚽</span>Calcio<span class="bnav-badge" id="bcnt-calcio">0</span></button>
   </div>
 </nav>
-
-<!-- ═══ MODAL ═══ -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModalOnOverlay(event)">
   <div class="modal-box">
     <div class="modal-handle"></div>
@@ -724,11 +609,8 @@ tbody td:not(.td-booked):not(.td-time):hover{
     </div>
   </div>
 </div>
-
 <div class="toast" id="toast"></div>
-
 <script>
-// ═══ SUPABASE ═══════════════════════════════════════════════════════
 const SB_URL='https://xjucqvcbhknfdyjtdwbr.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqdWNxdmNiaGtuZmR5anRkd2JyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMzg4OTgsImV4cCI6MjA5NTYxNDg5OH0.uitw5FUJx1XmDsBpjdS6u2DV2qUpqMPbzktlkW4BGpY';
 const TABLE='prenotazioni_settimane';
@@ -737,15 +619,8 @@ async function sbFetch(path,opts={}){
   if(!r.ok){throw new Error(await r.text());}
   const t=await r.text();return t?JSON.parse(t):null;
 }
-async function dbLoad(key){
-  const r=await sbFetch(`${TABLE}?id=eq.${encodeURIComponent(key)}&select=*`);
-  return r&&r.length?r[0]:null;
-}
-async function dbSave(p){
-  await sbFetch(TABLE,{method:'POST',prefer:'resolution=merge-duplicates',headers:{'Prefer':'resolution=merge-duplicates'},body:JSON.stringify(p)});
-}
-
-// ═══ COSTANTI ════════════════════════════════════════════════════════
+async function dbLoad(key){const r=await sbFetch(`${TABLE}?id=eq.${encodeURIComponent(key)}&select=*`);return r&&r.length?r[0]:null;}
+async function dbSave(p){await sbFetch(TABLE,{method:'POST',prefer:'resolution=merge-duplicates',headers:{'Prefer':'resolution=merge-duplicates'},body:JSON.stringify(p)});}
 const CAMPI=['padel1','padel2','tennis1','tennis2','calcio'];
 const SPORT={padel1:'padel',padel2:'padel',tennis1:'tennis',tennis2:'tennis',calcio:'calcio'};
 const SPORT_LABEL={padel:'🎾 Padel',tennis:'🎾 Tennis',calcio:'⚽ Calcio'};
@@ -757,8 +632,6 @@ const DEFAULT_SLOTS=['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15
 let campoSlots={};
 CAMPI.forEach(c=>{campoSlots[c]=[...DEFAULT_SLOTS];});
 const isMobile=()=>window.innerWidth<640;
-
-// ═══ MODAL ═══════════════════════════════════════════════════════════
 let _modalCell=null;
 function openModal(cell){
   _modalCell=cell;
@@ -784,8 +657,6 @@ function saveModal(){
   refreshCellState(_modalCell);updateCounters();closeModal();
   showToast('✅ Prenotazione salvata','success');
 }
-
-// ═══ DATE / TIME UTILS ═══════════════════════════════════════════════
 function parseIT(s){
   if(!s)return null;
   const p=s.trim().split('/');
@@ -811,8 +682,6 @@ function nextHour(t){const[h,m]=t.split(':').map(Number);return((h+1)%24).toStri
 function slotKey(t){return t.replace(':','');}
 function weekKey(s){return s?'rc_'+s.replace(/\//g,'_'):null;}
 function currentWeekKey(){return weekKey(document.getElementById('date-from').value.trim());}
-
-// ═══ META ════════════════════════════════════════════════════════════
 function syncWeekMeta(from){
   if(!from){
     document.getElementById('date-to').value='';
@@ -823,7 +692,7 @@ function syncWeekMeta(from){
   const sun=new Date(from);sun.setDate(from.getDate()+6);
   document.getElementById('date-to').value=fmtIT(sun);
   document.getElementById('week-range').textContent=fmtShort(from)+' – '+fmtShort(sun);
-  document.getElementById('footer-info').textContent=`Sett. ${fmtIT(from)} – ${fmtIT(sun)}  ·  ${document.getElementById('responsabile').value||'—'}`;
+  document.getElementById('footer-info').textContent=`Sett. ${fmtIT(from)} – ${fmtIT(sun)} · ${document.getElementById('responsabile').value||'—'}`;
 }
 function refreshDateHeaders(from){
   const today=todayMidnight();
@@ -838,18 +707,9 @@ function refreshDateHeaders(from){
     });
   });
 }
-
-// ═══ RENDER ══════════════════════════════════════════════════════════
 function renderCampo(campo){
   const sport=SPORT[campo],cc=sport==='padel'?'':'c-'+sport,slots=campoSlots[campo];
-  let html=`<div class="add-slot-bar">
-    <label>Aggiungi orario</label>
-    <input class="slot-time-input" id="nss-${campo}" placeholder="09:30" maxlength="5" inputmode="numeric">
-    <span class="arrow-sep">→</span>
-    <input class="slot-time-input" id="nse-${campo}" placeholder="fine" maxlength="5" inputmode="numeric">
-    <button class="btn-add-slot" onclick="addSlot('${campo}')">+ Aggiungi slot</button>
-    <span style="font-size:10px;color:#94a3b8">Es: 09:30 → 11:00</span>
-  </div><div class="table-wrap"><table><thead><tr><th class="th-time"><div class="th-time-inner">orario</div></th>`;
+  let html=`<div class="add-slot-bar"><label>Aggiungi orario</label><input class="slot-time-input" id="nss-${campo}" placeholder="09:30" maxlength="5" inputmode="numeric"><span class="arrow-sep">→</span><input class="slot-time-input" id="nse-${campo}" placeholder="fine" maxlength="5" inputmode="numeric"><button class="btn-add-slot" onclick="addSlot('${campo}')">+ Aggiungi slot</button><span style="font-size:10px;color:#94a3b8">Es: 09:30 → 11:00</span></div><div class="table-wrap"><table><thead><tr><th class="th-time"><div class="th-time-inner">orario</div></th>`;
   DAYS.forEach((d,i)=>{
     const wk=WEEKEND.includes(i)?' th-weekend':'';
     html+=`<th class="th-day${wk}"><div class="day-header"><span class="day-name">${d}</span><span class="day-date" data-day-idx="${i}">—</span></div></th>`;
@@ -859,7 +719,7 @@ function renderCampo(campo){
     html+=`<tr><td colspan="8" style="text-align:center;color:#94a3b8;font-size:13px;padding:40px 20px">Nessun orario — usa la barra sopra per aggiungere slot.</td></tr>`;
   }else{
     slots.forEach(slot=>{
-      html+=`<tr><td class="td-time"><span class="slot-label">${slot}</span><span class="slot-sub">fino alle ${nextHour(slot)}</span><button class="btn-del-slot" onclick="removeSlot('${campo}','${slot}')" title="Rimuovi orario">✕ rimuovi</button></td>`;
+      html+=`<tr><td class="td-time"><span class="slot-label">${slot}</span><span class="slot-sub">fino alle ${nextHour(slot)}</span><button class="btn-del-slot" onclick="removeSlot('${campo}','${slot}')">✕ rimuovi</button></td>`;
       DAYS.forEach((_,di)=>{
         const wkc=WEEKEND.includes(di)?' td-weekend':'';
         html+=`<td class="${wkc}" id="td-${campo}-${slotKey(slot)}-${di}"><div class="cell" data-campo="${campo}" data-slot="${slot}" data-day="${di}"><span class="cell-booked-tag">Prenotato</span><div class="cell-row"><div class="field"><span class="fl">Nome</span><input class="fi ${cc} fi-nome" type="text" placeholder="—" autocomplete="off"></div><div class="field"><span class="fl">Telefono</span><input class="fi ${cc} fi-tel" type="tel" placeholder="—" autocomplete="off"></div></div><div class="cell-row"><div class="field"><span class="fl">Istruttore</span><input class="fi ${cc} fi-istr" type="text" placeholder="—" autocomplete="off"></div><div class="field"><span class="fl">Importo €</span><input class="fi ${cc} fi-importo" type="text" placeholder="—" autocomplete="off"></div></div></div></td>`;
@@ -897,12 +757,10 @@ function buildViews(){
   });
   renderAllCampi();
 }
-
-// ═══ SLOT MGMT ═══════════════════════════════════════════════════════
 function addSlot(campo){
   const si=document.getElementById('nss-'+campo),ei=document.getElementById('nse-'+campo);
   const start=normalizeTime(si.value);
-  if(!start){showToast('⚠️ Orario non valido (es: 09:30)','error');si.focus();return;}
+  if(!start){showToast('⚠️ Orario non valido','error');si.focus();return;}
   if(campoSlots[campo].includes(start)){showToast('ℹ️ '+start+' già presente','info');return;}
   const end=ei.value.trim()?normalizeTime(ei.value):nextHour(start);
   const existing=collectCampoData(campo);
@@ -910,20 +768,18 @@ function addSlot(campo){
   campoSlots[campo].push(start);campoSlots[campo].sort();
   renderCampo(campo);restoreCampoData(campo,existing);refreshDateHeaders(from);updateCounters();
   si.value='';ei.value='';si.focus();
-  showToast('✅ Slot '+start+' → '+(end||nextHour(start))+' aggiunto','success');
+  showToast('✅ Slot '+start+' aggiunto','success');
 }
 function removeSlot(campo,slot){
-  if(!confirm(`Rimuovere lo slot ${slot}? I dati andranno persi.`))return;
+  if(!confirm(`Rimuovere lo slot ${slot}?`))return;
   const existing=collectCampoData(campo);
   const from=parseIT(document.getElementById('date-from').value.trim());
   campoSlots[campo]=campoSlots[campo].filter(s=>s!==slot);
   renderCampo(campo);
   const filtered=Object.fromEntries(Object.entries(existing).filter(([k])=>!k.startsWith(`${campo}||${slot}||`)));
   restoreCampoData(campo,filtered);refreshDateHeaders(from);updateCounters();
-  showToast('🗑️ Slot '+slot+' rimosso','info');
+  showToast('🗑️ Slot rimosso','info');
 }
-
-// ═══ DATA ════════════════════════════════════════════════════════════
 function collectCampoData(campo){
   const data={};
   document.querySelectorAll(`.cell[data-campo="${campo}"]`).forEach(cell=>{
@@ -959,8 +815,6 @@ function refreshCellState(cell){
   td.classList.remove('td-booked','sport-tennis','sport-calcio');
   if(nome){td.classList.add('td-booked');if(sport!=='padel')td.classList.add('sport-'+sport);}
 }
-
-// ═══ NAV ═════════════════════════════════════════════════════════════
 function showCampo(campo){
   document.querySelectorAll('.campo-view').forEach(v=>v.classList.remove('active'));
   document.querySelectorAll('.tab-btn,.bnav-btn').forEach(b=>b.classList.remove('active'));
@@ -968,8 +822,6 @@ function showCampo(campo){
   const tb=document.getElementById('tab-'+campo);if(tb)tb.classList.add('active');
   const bb=document.getElementById('bnav-'+campo);if(bb)bb.classList.add('active');
 }
-
-// ═══ SAVE / LOAD ═════════════════════════════════════════════════════
 async function saveAll(){
   const key=currentWeekKey();
   if(!key){showToast('⚠️ Inserisci la data di inizio settimana','error');return;}
@@ -986,7 +838,7 @@ async function saveAll(){
     bar.className='status-pill saved';bar.textContent='✓ Salvato';
     const now=new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
     document.getElementById('sync-info').textContent='☁️ '+now;
-    showToast('✅ Salvato e sincronizzato!','success');
+    showToast('✅ Salvato!','success');
     setTimeout(()=>{bar.className='status-pill idle';bar.textContent='Pronto';},3000);
   }catch(e){
     bar.className='status-pill error';bar.textContent='Errore!';
@@ -1012,19 +864,15 @@ async function loadWeekData(key){
     return true;
   }catch(e){console.error(e);showToast('❌ Errore caricamento','error');return false;}
 }
-
-// ═══ CLEAR ═══════════════════════════════════════════════════════════
 function clearInputs(){
   document.querySelectorAll('.fi').forEach(i=>i.value='');
   document.querySelectorAll('td.td-booked').forEach(td=>td.classList.remove('td-booked','sport-tennis','sport-calcio'));
   updateCounters();
 }
 function clearAllConfirm(){
-  if(!confirm('Svuotare tutti i dati della settimana?\n(Gli slot orari vengono mantenuti.)'))return;
+  if(!confirm('Svuotare tutti i dati?'))return;
   clearInputs();showToast('🗑️ Foglio svuotato','info');
 }
-
-// ═══ WEEK SWITCH ═════════════════════════════════════════════════════
 async function switchToWeek(fromStr){
   CAMPI.forEach(c=>{campoSlots[c]=[...DEFAULT_SLOTS];});
   clearInputs();
@@ -1048,8 +896,6 @@ function navWeek(dir){
   const next=new Date(from);next.setDate(from.getDate()+dir*7);
   switchToWeek(fmtIT(next));
 }
-
-// ═══ COUNTERS ════════════════════════════════════════════════════════
 function updateCounters(){
   const c={padel1:0,padel2:0,tennis1:0,tennis2:0,calcio:0};
   document.querySelectorAll('.cell').forEach(cell=>{
@@ -1063,15 +909,11 @@ function updateCounters(){
   document.getElementById('stat-tennis').textContent=`Tennis: ${c.tennis1+c.tennis2}`;
   document.getElementById('stat-calcio').textContent=`Calcio: ${c.calcio}`;
 }
-
-// ═══ TOAST ═══════════════════════════════════════════════════════════
 function showToast(msg,type='info'){
   const t=document.getElementById('toast');
   t.textContent=msg;t.className=`toast ${type} show`;
   clearTimeout(t._tid);t._tid=setTimeout(()=>t.classList.remove('show'),3400);
 }
-
-// ═══ INPUT HANDLERS ══════════════════════════════════════════════════
 let _deb;
 document.getElementById('date-from').addEventListener('input',function(){
   clearTimeout(_deb);
@@ -1084,14 +926,10 @@ document.getElementById('date-from').addEventListener('input',function(){
 document.getElementById('responsabile').addEventListener('input',()=>{
   syncWeekMeta(parseIT(document.getElementById('date-from').value.trim())||null);
 });
-
-// ═══ AUTO-SAVE (ogni minuto) ══════════════════════════════════════════
 setInterval(()=>{
   const key=currentWeekKey();if(!key)return;
   if([...document.querySelectorAll('.fi-nome')].some(i=>i.value.trim()))saveAll();
 },60000);
-
-// ═══ SWIPE (mobile) ══════════════════════════════════════════════════
 let _tx=0;
 document.querySelector('.main').addEventListener('touchstart',e=>{_tx=e.touches[0].clientX;},{passive:true});
 document.querySelector('.main').addEventListener('touchend',e=>{
@@ -1099,8 +937,6 @@ document.querySelector('.main').addEventListener('touchend',e=>{
   const dx=e.changedTouches[0].clientX-_tx;
   if(Math.abs(dx)>72)navWeek(dx<0?1:-1);
 },{passive:true});
-
-// ═══ INIT ════════════════════════════════════════════════════════════
 buildViews();
 updateCounters();
 goToCurrentWeek();
